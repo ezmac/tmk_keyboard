@@ -53,6 +53,200 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FN_MIN          KC_FN0
 #define FN_MAX          KC_FN31
 
+/* 
+ * imported shortnames for ergodox configuration
+ */
+/* ----------------------------------------------------------------------------
+ * USB Keyboard Key Codes : short names
+ *
+ * These are for convenience (and to help with formatting, keeping stuff from
+ * getting too long).  See "keyboard-usage-page.h" for definitions and
+ * everything.
+ * ----------------------------------------------------------------------------
+ * Copyright (c) 2012 Ben Blazak <benblazak.dev@gmail.com>
+ * Released under The MIT License (MIT) (see "license.md")
+ * Project located at <https://github.com/benblazak/ergodox-firmware>
+ * ------------------------------------------------------------------------- */
+
+
+// error
+#define KEY_ErrorRollOver _ErrRollover
+#define KEY_POSTFail _PostFail
+#define KEY_ErrorUndefined _ErrUndef
+
+
+// ----------------------------------------------------------------------------
+// main keyboard
+// ----------------------------------------------------------------------------
+
+// letters
+#define KEY_a_A KC_A
+#define KEY_b_B KC_B
+#define KEY_c_C KC_C
+#define KEY_d_D KC_D
+#define KEY_e_E KC_E
+#define KEY_f_F KC_F
+#define KEY_g_G KC_G
+#define KEY_h_H KC_H
+#define KEY_i_I KC_I
+#define KEY_j_J KC_J
+#define KEY_k_K KC_K
+#define KEY_l_L KC_L
+#define KEY_m_M KC_M
+#define KEY_n_N KC_N
+#define KEY_o_O KC_O
+#define KEY_p_P KC_P
+#define KEY_q_Q KC_Q
+#define KEY_r_R KC_R
+#define KEY_s_S KC_S
+#define KEY_t_T KC_T
+#define KEY_u_U KC_U
+#define KEY_v_V KC_V
+#define KEY_w_W KC_W
+#define KEY_x_X KC_X
+#define KEY_y_Y KC_Y
+#define KEY_z_Z KC_Z
+
+// numbers
+#define KEY_0_RightParenthesis KC_0
+#define KEY_1_Exclamation KC_1
+#define KEY_2_At KC_2
+#define KEY_3_Pound KC_3
+#define KEY_4_Dollar KC_4
+#define KEY_5_Percent KC_5
+#define KEY_6_Caret KC_6
+#define KEY_7_Ampersand KC_7
+#define KEY_8_Asterisk KC_8
+#define KEY_9_LeftParenthesis KC_9
+
+// function
+#define KEY_F1 KC_F1
+#define KEY_F2 KC_F2
+#define KEY_F3 KC_F3
+#define KEY_F4 KC_F4
+#define KEY_F5 KC_F5
+#define KEY_F6 KC_F6
+#define KEY_F7 KC_F7
+#define KEY_F8 KC_F8
+#define KEY_F9 KC_F9
+#define KEY_F10 KC_F10
+#define KEY_F11 KC_F11
+#define KEY_F12 KC_F12
+#define KEY_F13 KC_F13
+#define KEY_F14 KC_F14
+#define KEY_F15 KC_F15
+#define KEY_F16 KC_F16
+#define KEY_F17 KC_F17
+#define KEY_F18 KC_F18
+#define KEY_F19 KC_F19
+#define KEY_F20 KC_F20
+#define KEY_F21 KC_F21
+#define KEY_F22 KC_F22
+#define KEY_F23 KC_F23
+#define KEY_F24 KC_F24
+
+// whitespace and symbols
+#define KEY_ReturnEnter KC_ENTER
+#define KEY_Spacebar KC_SPACE
+#define KEY_Tab KC_TAB
+// ---
+#define KEY_Backslash_Pipe KC_BSLASH
+#define KEY_LeftBracket_LeftBrace KC_LBRACKET
+#define KEY_RightBracket_RightBrace KC_RBRACKET
+#define KEY_Comma_LessThan KC_COMMA
+#define KEY_Dash_Underscore KC_MINUS
+#define KEY_Equal_Plus KC_EQUAL
+#define KEY_GraveAccent_Tilde KC_GRAVE
+#define KEY_Period_GreaterThan KC_DOT
+#define KEY_SingleQuote_DoubleQuote KC_QUOTE
+#define KEY_Semicolon_Colon KC_SCOLON
+#define KEY_Slash_Question KC_SLASH
+// ---
+/*
+#define KEY_DecimalSeparator KC_sep_dec
+#define KEY_ThousandsSeparator KC_sep_thousands
+#define KEY_CurrencyUnit KC_currencyUnit
+#define KEY_CurrencySubunit KC_currencySubunit
+*/
+// international and language
+#define KEY_International1 KC_INT1
+#define KEY_International2 KC_INT2
+#define KEY_International3 KC_INT3
+#define KEY_International4 KC_INT4
+#define KEY_International5 KC_INT5
+#define KEY_International6 KC_INT6
+#define KEY_International7 KC_INT7
+#define KEY_International8 KC_INT8
+#define KEY_International9 KC_INT9
+// ---
+#define KEY_LANG1 KC_LANG1
+#define KEY_LANG2 KC_LANG2
+#define KEY_LANG3 KC_LANG3
+#define KEY_LANG4 KC_LANG4
+#define KEY_LANG5 KC_LANG5
+#define KEY_LANG6 KC_LANG6
+#define KEY_LANG7 KC_LANG7
+#define KEY_LANG8 KC_LANG8
+#define KEY_LANG9 KC_LANG9
+// ---
+#define KEY_NonUS_Backslash_Pipe KC_backslash_nonUS
+#define KEY_NonUS_Pound_Tilde KC_pound_nonUS
+
+// text control
+#define KEY_DeleteBackspace KC_BSPACE
+#define KEY_DeleteForward KC_DEL
+#define KEY_Home KC_HOME
+#define KEY_End KC_END
+#define KEY_PageUp KC_PGIP
+#define KEY_PageDown KC_PGDOWN
+#define KEY_UpArrow KC_UP
+#define KEY_DownArrow KC_DOWN
+#define KEY_LeftArrow KC_LEFT
+#define KEY_RightArrow KC_RIGHT
+#define KEY_Escape KC_ESC
+#define KEY_Insert KC_INSERT
+
+// modifier
+#define KEY_LeftAlt KC_LALT
+#define KEY_RightAlt KC_RALT
+#define KEY_LeftControl KC_LCTRL
+#define KEY_RightControl KC_RCTRL
+#define KEY_LeftGUI KC_LGUI
+#define KEY_RightGUI KC_RGUI
+#define KEY_LeftShift KC_LSHIFT
+#define KEY_RightShift KC_RSHIFT
+
+// lock
+#define KEY_CapsLock KC_CAPSLOCK
+#define KEY_ScrollLock KC_SCROLLLOCK
+// (numlock is under keypad)
+// --- not generally used
+#define KEY_LockingCapsLock KC_LOCKING_CAPS
+#define KEY_LockingNumLock KC_LOCKING_NUM
+#define KEY_LockingScrollLock KC_LOCKING_SCROLL
+
+// special function
+#define KEY_Pause KC_PAUSE
+#define KEY_PrintScreen KC_PRINT
+// ---
+#define KEY_Application KC_APP
+#define KEY_Execute KC_EXECUTE
+#define KEY_Power KC_POWER
+// ---
+#define KEY_Help KC_HELP
+#define KEY_Menu KC_MENU
+// ---
+#define KEY_Cut KC_CUT
+#define KEY_Copy KC_COPY
+#define KEY_Paste KC_PASTE
+#define KEY_Find KC_FIND
+#define KEY_Select KC_SELECT
+#define KEY_Stop KC_STOP
+#define KEY_Undo KC_UNDO
+// ---
+#define KEY_Mute KC_AUDIO_MUTE
+#define KEY_VolumeUp KC_AUDIO_VOL_UP
+#define KEY_VolumeDown KC_AUDIO_VOL_DOWN
 
 /*
  * Short names for ease of definition of keymap

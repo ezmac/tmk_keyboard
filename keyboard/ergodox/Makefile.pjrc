@@ -100,7 +100,9 @@ INVERT_NUMLOCK = yes 	# invert state of NumLock led
 
 # Search Path
 VPATH += $(TARGET_DIR)
-VPATH += $(TMK_DIR)
+ezmac: OPT_DEFS += -DKEYMAP_EZMAC
+ezmac: all
+
 
 include $(TMK_DIR)/protocol.mk
 include $(TMK_DIR)/protocol/pjrc.mk
