@@ -115,4 +115,7 @@ micro: all
 cub: OPT_DEFS += -DKEYMAP_CUB
 cub: all
 
+ezmac: OPT_DEFS += -DKEYMAP_EZMAC
+ezmac: all
+
 
