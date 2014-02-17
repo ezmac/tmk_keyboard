@@ -1,3 +1,14 @@
+#include <stdint.h>
+#include <stdbool.h>
+#include <avr/pgmspace.h>
+#include "keycode.h"
+#include "action.h"
+#include "action_macro.h"
+#include "report.h"
+#include "host.h"
+#include "debug.h"
+#include "keymap.h"
+
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
      * Keymap: Default Layer in QWERTY
@@ -89,13 +100,22 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                 `--------------------'       `--------------------'
      *
      */
+
+/*
+ * I'd like to have no combo keys required.  that means all modifiers should be toggle-able
+ * the question is "Should it act like sticky keys or just be oneshot?"
+ *
+ * 
+ */
+
+
 #define KC_COMBO(keys) keys
 
-    KEYMAP(  // Layer0: default, leftled:none
+    KEYMAP(  // Layer0: default
         // left hand
         GRV, 1,   2,   3,   4,   5,   F5,
         TAB, Q,   W,   E,   R,   T,   NO,
-        ESC, A,   S,   D,   F,   G,
+        ESC, A,   S,   D,   FN9,   G,
         LSFT,Z,   X,   C,   V,   B,   NO,
         FN1,FN4,FN2,LEFT,RIGHT,
                                       LGUI,LALT,
@@ -112,7 +132,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         RCTRL, FN1, SPACE
     ),
 
-    KEYMAP(  // Layer1: blueshift, leftled:all
+    KEYMAP(  // Layer1: blueshift
         // left hand
         NO, F1, F2, F3, F4, F5, F6, 
         TRNS, NO, NO, NO, NO, NO, TRNS,
@@ -124,9 +144,9 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  ESC,TRNS,TRNS,
         // right hand
              F7, F8, F9, F10, F11, F12, MINUS,
-             TRNS,FN7 , FN8, LBRC, RBRC, NO,EQUAL,
+             TRNS, TRNS,LBRC, RBRC, FN7 , FN8, EQUAL,
                 LEFT,   DOWN,   UP,   RIGHT, NO  ,   TRNS,
-             TRNS,MENU, INS,   HOME,PGUP,TRNS,TRNS,
+             TRNS,APP, INS,   HOME,PGUP,TRNS,TRNS,
                        DEL,END,PGDN,SLASH,TRNS,
         TRNS,TRNS,
         NO,
@@ -343,7 +363,22 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* id for user defined functions */
 enum function_id {
     TEENSY_KEY,
+    ONE_SHOT_SHIFT,
+    ONE_SHOT_ALT,
+    ONE_SHOT_CTRL,
+    ONE_SHOT_META,
+    ONE_SHOT_BLUESHIFT,
 };
+
+enum macro_id {
+    LSHIFT_LBRACE,
+    LSHIFT_RBRACE,
+    LSHIFT_LPAREN,
+    LSHIFT_RPAREN,
+    HELLO,
+    VOLUP,
+};
+
 
 /*
  * Fn action definition
@@ -351,18 +386,19 @@ enum function_id {
 static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
-    ACTION_LAYER_MOMENTARY(1),                      // FN1 - Toggle layer one
+    ACTION_LAYER_MOMENTARY(1),                     // FN1 - Toggle layer one
     ACTION_LAYER_ON(2, ON_PRESS),                             // FN2 - Push layer 2
     ACTION_LAYER_OFF(2, ON_PRESS),                            // FN3 - Pop layer 2
     ACTION_LAYER_MOMENTARY(4),                      // FN4 - Toggle layer four 
 
 
-    ACTION_MODS_TAP_KEY(MOD_LCTL, KC_BSPC),         // FN5  = LShift with tap BackSpace
-    ACTION_MODS_TAP_KEY(MOD_LSFT, KC_DEL),          // FN6  = LCtrl  with tap Delete
-    ACTION_MODS_TAP_KEY(MOD_LALT, KC_ESC),          // FN7  = LAlt   with tap Escape
-    ACTION_MODS_TAP_KEY(MOD_RALT, KC_INS),          // FN8  = RAlt   with tap Ins
-    ACTION_MODS_TAP_KEY(MOD_RSFT, KC_ENT),          // FN9  = RShift with tap Enter
-    ACTION_MODS_TAP_KEY(MOD_RCTL, KC_SPC),          // FN10 = RCtrl  with tap Space
+    ACTION_MACRO_TAP(LSHIFT_LPAREN),
+    ACTION_MACRO_TAP(LSHIFT_RPAREN),
+    ACTION_MACRO_TAP(LSHIFT_LBRACE),
+    ACTION_MACRO_TAP(LSHIFT_RBRACE),
+
+    ACTION_LAYER_TAP_KEY(1, KC_F),                  // FN9 = layer push for blueshift on F.
+    ACTION_FUNCTION(ONE_SHOT_SHIFT),                // FN10 = One shot shift.
 
     ACTION_MODS_TAP_KEY(MOD_LSFT, KC_TAB),          // FN11 = LShift with tap Tab
     ACTION_MODS_TAP_KEY(MOD_LCTL, KC_GRV),          // FN12 = LCtrl  with tap Tilda
@@ -392,17 +428,16 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_LAYER_TAP_KEY(2, KC_F),                  // FN31 = momentary Layer2 on F key, to use with Numpad keys
 };
 
-void action_function(keyrecord_t *event, uint8_t id, uint8_t opt)
-{
-    print("action_function called\n");
-    print("id  = "); phex(id); print("\n");
-    print("opt = "); phex(opt); print("\n");
-    if (id == TEENSY_KEY) {
-        clear_keyboard();
-        print("\n\nJump to bootloader... ");
-        _delay_ms(250);
-        bootloader_jump(); // should not return
-        print("not supported.\n");
-    }
-}
 
+
+
+
+
+/*
+ * user defined action function
+ */
+void action_function(keyrecord_t *record, uint8_t id, uint8_t opt);
+
+
+
+const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt);

@@ -230,3 +230,127 @@ action_t keymap_fn_to_action(uint8_t keycode)
     return action;
 }
 
+
+void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
+{
+    keyevent_t event = record->event;
+    tap_t tap = record->tap;
+
+    print("action_function called\n");
+    print("id  = "); phex(id); print("\n");
+    print("opt = "); phex(opt); print("\n");
+    switch (id) {
+        case TEENSY_KEY:
+            clear_keyboard();
+            print("\n\nJump to bootloader... ");
+            _delay_ms(250);
+            bootloader_jump(); // should not return
+            print("not supported.\n");
+            break;
+        case LSHIFT_LPAREN:
+            break;
+        case ONE_SHOT_SHIFT:
+            if (tap.count=1 && !tap.interrupted)
+            {
+              ACTION_MODS_ONESHOT(MOD_LSFT);
+            }
+            else {
+              return KC_LSFT;
+            }
+
+            break;
+
+            // LShft + tap '('
+            // NOTE: cant use register_code to avoid conflicting with magic key bind
+/*            if (event.pressed) {
+                if (tap.count == 0 || tap.interrupted) {
+                    add_mods(MOD_BIT(KC_LSHIFT));
+                } else {
+                    host_add_mods(MOD_BIT(KC_LSHIFT));
+                    host_add_key(KC_9);
+                    host_send_keyboard_report();
+                    host_del_mods(MOD_BIT(KC_LSHIFT));
+                    host_del_key(KC_9);
+                    host_send_keyboard_report();
+                }
+            } else {
+                if (tap.count == 0 || tap.interrupted) {
+                    del_mods(MOD_BIT(KC_LSHIFT));
+                }
+            }
+            break;
+        case LSHIFT_RPAREN:
+            // RShift + tap ')'
+            if (event.pressed) {
+                if (tap.count == 0 || tap.interrupted) {
+                    add_mods(MOD_BIT(KC_RSHIFT));
+                } else {
+                    host_add_mods(MOD_BIT(KC_RSHIFT));
+                    host_add_key(KC_0);
+                    host_send_keyboard_report();
+                    host_del_mods(MOD_BIT(KC_RSHIFT));
+                    host_del_key(KC_0);
+                    host_send_keyboard_report();
+                }
+            } else {
+                if (tap.count == 0 || tap.interrupted) {
+                    del_mods(MOD_BIT(KC_RSHIFT));
+                }
+            }
+            break;
+            */
+    }
+}
+
+
+const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
+{
+    keyevent_t event = record->event;
+    tap_t tap = record->tap;
+
+    switch (id) {
+        case LSHIFT_LBRACE:
+            if (tap.count > 0 && !tap.interrupted) {
+                return (event.pressed ?
+                        MACRO( D(LSHIFT), T(LBRC), U(LSHIFT), END ) : MACRO_NONE);
+            } else {
+                return (event.pressed ?
+                        MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
+            }
+        case LSHIFT_RBRACE:
+            if (tap.count > 0 && !tap.interrupted) {
+                return (event.pressed ?
+                        MACRO( D(RSHIFT), T(RBRC), U(RSHIFT), END ) : MACRO_NONE);
+            } else {
+                return (event.pressed ?
+                        MACRO( D(RSHIFT), END ) : MACRO( U(RSHIFT), END ) );
+            }
+        case LSHIFT_LPAREN:
+            if (tap.count > 0 && !tap.interrupted) {
+                return (event.pressed ?
+                        MACRO( D(LSHIFT), D(9), U(9), U(LSHIFT), END ) : MACRO_NONE);
+            } else {
+                return (event.pressed ?
+                        MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
+            }
+        case LSHIFT_RPAREN:
+            if (tap.count > 0 && !tap.interrupted) {
+                return (event.pressed ?
+                        MACRO( D(RSHIFT), D(0), U(0), U(RSHIFT), END ) : MACRO_NONE);
+            } else {
+                return (event.pressed ?
+                        MACRO( D(RSHIFT), END ) : MACRO( U(RSHIFT), END ) );
+            }
+        case HELLO:
+            return (event.pressed ?
+                    MACRO( I(0), T(H), T(E), T(L), T(L), W(255), T(O), END ) :
+                    MACRO_NONE );
+        case VOLUP:
+            return (event.pressed ?
+                    MACRO( D(VOLU), U(VOLU), END ) :
+                    MACRO_NONE );
+    }
+    return MACRO_NONE;
+}
+
+
