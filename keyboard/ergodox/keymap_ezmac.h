@@ -108,7 +108,6 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * 
  */
 
-
 #define KC_COMBO(keys) keys
 
     KEYMAP(  // Layer0: default
@@ -117,7 +116,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TAB, Q,   W,   E,   R,   T,   NO,
         ESC, A,   S,   D,   F,   G,
         LSFT,Z,   X,   C,   V,   B,   NO,
-        FN1,FN4,FN2,LEFT,RIGHT,
+        FN1,FN4,FN2,LEFT,FN10,
                                       LGUI,LALT,
                                            LGUI,
                                  BSPACE, FN1, LCTRL,
@@ -398,7 +397,7 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_MACRO_TAP(LSHIFT_RBRACE),
 
     ACTION_LAYER_TAP_KEY(1, KC_F),                  // FN9 = layer push for blueshift on F.
-    ACTION_FUNCTION(ONE_SHOT_SHIFT),                // FN10 = One shot shift.
+    ACTION_FUNCTION(LSHIFT_LPAREN),                // FN10 = One shot shift.
 
     ACTION_MODS_TAP_KEY(MOD_LSFT, KC_TAB),          // FN11 = LShift with tap Tab
     ACTION_MODS_TAP_KEY(MOD_LCTL, KC_GRV),          // FN12 = LCtrl  with tap Tilda
