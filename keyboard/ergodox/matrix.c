@@ -68,6 +68,11 @@ uint8_t matrix_cols(void)
 
 void matrix_init(void)
 {
+#include "debug_config.h"
+  debug_config.enable = true; // enable debug print
+  debug_config.matrix = true; // enable matrix debug
+  debug_config.keyboard = false; // enable keyboard report debug
+  debug_config.mouse = false;  // enable mouse report debug
     // initialize row and col
     init_ergodox();
     mcp23018_status = init_mcp23018();
