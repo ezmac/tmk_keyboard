@@ -115,7 +115,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // left hand
         GRV, 1,   2,   3,   4,   5,   F5,
         TAB, Q,   W,   E,   R,   T,   NO,
-        ESC, A,   S,   D,   FN9,   G,
+        ESC, A,   S,   D,   F,   G,
         LSFT,Z,   X,   C,   V,   B,   NO,
         FN1,FN4,FN2,LEFT,RIGHT,
                                       LGUI,LALT,

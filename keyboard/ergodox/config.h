@@ -29,7 +29,7 @@ Project located at <https://github.com/benblazak/ergodox-firmware>
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x1111
 #define DEVICE_VER      0x0001
-#define MANUFACTURER    TMK/Cub
+#define MANUFACTURER    TMK/Ezmac
 #define PRODUCT         Ergodox
 #define DESCRIPTION     t.m.k. keyboard firmware for Ergodox
 
