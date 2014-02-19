@@ -247,40 +247,46 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             bootloader_jump(); // should not return
             print("not supported.\n");
             break;
-        case LSHIFT_LPAREN:
+        case ONE_SHOT_SHIFT:
             // LShft + tap '('
             // NOTE: cant use register_code to avoid conflicting with magic key bind
-            xprintf("%s", "got to LSHIFT_PAREN function\n");
+            //this is basically how ACTION_MODS_TAP_KEY works.
             if (event.pressed) {
-                xprintf("%s", "event.pressed true\n");
-                xprintf("%s = %d\n", "tap.count",tap.count);
+                xprintf("pressEvent\n");
                 if (tap.count == 0 || tap.interrupted) {
-                    xprintf("Adding shift modifier\n");
+                    xprintf("   Adding shift modifier\n");
                     add_mods(MOD_BIT(KC_LSHIFT));
                 } else {
-                    xprintf("Trying to send )\n");
-                    add_mods(MOD_BIT(KC_LSHIFT));
-                    add_key(KC_9);
-                    send_keyboard_report();
-                    del_mods(MOD_BIT(KC_LSHIFT));
-                    del_key(KC_9);
-                    send_keyboard_report();
+                  dprint("dp setting one shot lshift mod\n");
+                  xprintf("xp setting one shot lshift mod\n");
+                  set_oneshot_mods(MOD_LSFT);
                 }
             } else {
+                xprintf("releaseEvent\n");
                 if (tap.count == 0 || tap.interrupted) {
-                    xprintf("lsfp released");
+                    xprintf("lsfp released\n");
+                  dprint("dp setting one shot lshift mod\n");
+                  xprintf("xp setting one shot lshift mod\n");
+                  clear_oneshot_mods(MOD_LSFT);
                     del_mods(MOD_BIT(KC_LSHIFT));
                 }
+                else
+                {
+                }
             }
+            xprintf("keyRecord:\n\
+     keyEvent:\n\
+         \tpressed: %d\n\
+         \ttime: %u\n\
+     tap:\n\
+         \tinterrupted: %d\n\
+         \treserved2: %d\n\
+         \treserved1: %d\n\
+         \treserved0: %d\n\
+         \ttap_count: %d\n\
+         "
+         ,event.pressed, event.time, tap.interrupted, tap.reserved2, tap.reserved1, tap.reserved0, tap.count);
             break;
-        case ONE_SHOT_SHIFT:
-            if (tap.count=1 && !tap.interrupted)
-            {
-              ACTION_MODS_ONESHOT(MOD_LSFT);
-            }
-            else {
-              return KC_LSFT;
-            }
 
             break;
 
@@ -331,18 +337,18 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 return (event.pressed ?
                         MACRO( D(RSHIFT), END ) : MACRO( U(RSHIFT), END ) );
             }
-        case LSHIFT_LPAREN:
+        case LSHIFT_LT:
             if (tap.count > 0 && !tap.interrupted) {
                 return (event.pressed ?
-                        MACRO( D(LSHIFT), D(9), U(9), U(LSHIFT), END ) : MACRO_NONE);
+                        MACRO( D(LSHIFT), T(COMMA), U(LSHIFT), END ) : MACRO_NONE);
             } else {
                 return (event.pressed ?
                         MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
             }
-        case LSHIFT_RPAREN:
+        case LSHIFT_GT:
             if (tap.count > 0 && !tap.interrupted) {
                 return (event.pressed ?
-                        MACRO( D(RSHIFT), D(0), U(0), U(RSHIFT), END ) : MACRO_NONE);
+                        MACRO( D(RSHIFT), D(DOT), U(DOT), U(RSHIFT), END ) : MACRO_NONE);
             } else {
                 return (event.pressed ?
                         MACRO( D(RSHIFT), END ) : MACRO( U(RSHIFT), END ) );

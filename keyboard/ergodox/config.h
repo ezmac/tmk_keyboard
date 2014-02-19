@@ -42,8 +42,9 @@ Project located at <https://github.com/benblazak/ergodox-firmware>
 #define MOUSEKEY_TIME_TO_MAX    10
 
  
-#define TAPPING_TOGGLE 1
-#define TAPPING_TERM    200
+// define the number of taps it takes to toggle
+#define TAPPING_TOGGLE 2
+#define TAPPING_TERM    300
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
