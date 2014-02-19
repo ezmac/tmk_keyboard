@@ -229,8 +229,45 @@ action_t keymap_fn_to_action(uint8_t keycode)
     }
     return action;
 }
-
-
+void var_dump_keyrecord(keyrecord_t *record)
+{
+  keyevent_t event = record->event;
+  tap_t tap = record->tap;
+  
+  xprintf("keyRecord:\n\
+    keyEvent:\n\
+        \tpressed: %d\n\
+        \ttime: %u\n\
+    tap:\n\
+        \tinterrupted: %d\n\
+        \treserved2: %d\n\
+        \treserved1: %d\n\
+        \treserved0: %d\n\
+        \ttap_count: %d\n\
+        "
+    ,event.pressed, event.time, tap.interrupted, tap.reserved2, tap.reserved1, tap.reserved0, tap.count);
+}
+//TODO: Make this take the modifier key.  Figure out if this should handle the event with a name like add.
+void handle_one_shot_mod_action(keyrecord_t *record)
+{  
+  keyevent_t event = record->event;
+  tap_t tap = record->tap;
+  if (event.pressed) {
+    if (tap.count == 0 || tap.interrupted) {
+      add_mods(MOD_BIT(KC_LSHIFT));
+    } else {
+      set_oneshot_mods(MOD_LSFT);
+    }
+  } else {
+    if (tap.count == 0 || tap.interrupted) {
+      clear_oneshot_mods(MOD_LSFT);
+      del_mods(MOD_BIT(KC_LSHIFT));
+    }
+    else
+    {
+    }
+  }
+)
 void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
     keyevent_t event = record->event;
@@ -247,70 +284,91 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             bootloader_jump(); // should not return
             print("not supported.\n");
             break;
-        case ONE_SHOT_SHIFT:
-            // LShft + tap '('
+        case ONE_SHOT_LSHIFT:
             // NOTE: cant use register_code to avoid conflicting with magic key bind
             //this is basically how ACTION_MODS_TAP_KEY works.
             if (event.pressed) {
-                xprintf("pressEvent\n");
-                if (tap.count == 0 || tap.interrupted) {
-                    xprintf("   Adding shift modifier\n");
-                    add_mods(MOD_BIT(KC_LSHIFT));
-                } else {
-                  dprint("dp setting one shot lshift mod\n");
-                  xprintf("xp setting one shot lshift mod\n");
-                  set_oneshot_mods(MOD_LSFT);
-                }
+              if (tap.count == 0 || tap.interrupted) {
+                add_mods(MOD_BIT(KC_LSHIFT));
+              } else {
+                set_oneshot_mods(MOD_LSFT);
+              }
             } else {
-                xprintf("releaseEvent\n");
-                if (tap.count == 0 || tap.interrupted) {
-                    xprintf("lsfp released\n");
-                  dprint("dp setting one shot lshift mod\n");
-                  xprintf("xp setting one shot lshift mod\n");
-                  clear_oneshot_mods(MOD_LSFT);
-                    del_mods(MOD_BIT(KC_LSHIFT));
-                }
-                else
-                {
-                }
+              if (tap.count == 0 || tap.interrupted) {
+                del_mods(MOD_BIT(KC_LSHIFT));
+              }
+              else
+              {
+                clear_oneshot_mods(MOD_LSFT);
+              }
             }
-            xprintf("keyRecord:\n\
-     keyEvent:\n\
-         \tpressed: %d\n\
-         \ttime: %u\n\
-     tap:\n\
-         \tinterrupted: %d\n\
-         \treserved2: %d\n\
-         \treserved1: %d\n\
-         \treserved0: %d\n\
-         \ttap_count: %d\n\
-         "
-         ,event.pressed, event.time, tap.interrupted, tap.reserved2, tap.reserved1, tap.reserved0, tap.count);
+            //add_one_shot_mod(MOD_LSFT);
             break;
-
-            break;
-
-/*
-        case LSHIFT_RPAREN:
-            // RShift + tap ')'
+        case ONE_SHOT_RSHIFT:
+            // NOTE: cant use register_code to avoid conflicting with magic key bind
+            //this is basically how ACTION_MODS_TAP_KEY works when given a FN that one shots the modifier.
             if (event.pressed) {
-                if (tap.count == 0 || tap.interrupted) {
-                    add_mods(MOD_BIT(KC_RSHIFT));
-                } else {
-                    host_add_mods(MOD_BIT(KC_RSHIFT));
-                    host_add_key(KC_0);
-                    host_send_keyboard_report();
-                    host_del_mods(MOD_BIT(KC_RSHIFT));
-                    host_del_key(KC_0);
-                    host_send_keyboard_report();
-                }
+              if (tap.count == 0 || tap.interrupted) {
+                add_mods(MOD_BIT(KC_RSHIFT));
+              } else {
+                set_oneshot_mods(MOD_RSFT);
+              }
             } else {
-                if (tap.count == 0 || tap.interrupted) {
-                    del_mods(MOD_BIT(KC_RSHIFT));
-                }
+              if (tap.count == 0 || tap.interrupted) {
+                //Are both of these necessary or even wanted?
+                //clear_oneshot_mods(MOD_RSFT);
+                del_mods(MOD_BIT(KC_RSHIFT));
+              }
+              else
+              {
+                clear_oneshot_mods(MOD_RSFT)
+              }
             }
+            //add_one_shot_mod(MOD_LSFT);
             break;
-            */
+        case ONE_SHOT_LCTRL:
+            // NOTE: cant use register_code to avoid conflicting with magic key bind
+            //this is basically how ACTION_MODS_TAP_KEY works when given a FN that one shots the modifier.
+            if (event.pressed) {
+              if (tap.count == 0 || tap.interrupted) {
+                add_mods(MOD_BIT(KC_RCTRL));
+              } else {
+                set_oneshot_mods(MOD_RCTL);
+              }
+            } else {
+              if (tap.count == 0 || tap.interrupted) {
+                //Are both of these necessary or even wanted?
+                //clear_oneshot_mods(MOD_RSFT);
+                del_mods(MOD_BIT(KC_RCTRL));
+              }
+              else
+              {
+                clear_oneshot_mods(MOD_RSFT)
+              }
+            }
+            //add_one_shot_mod(MOD_LSFT);
+            break;
+        case ONE_SHOT_RCTRL:
+            // NOTE: cant use register_code to avoid conflicting with magic key bind
+            //this is basically how ACTION_MODS_TAP_KEY works when given a FN that one shots the modifier.
+            if (event.pressed) {
+              if (tap.count == 0 || tap.interrupted) {
+                add_mods(MOD_BIT(KC_RSHIFT));
+              } else {
+                set_oneshot_mods(MOD_RSFT);
+              }
+            } else {
+              if (tap.count == 0 || tap.interrupted) {
+                //Are both of these necessary or even wanted?
+                //clear_oneshot_mods(MOD_RSFT);
+                del_mods(MOD_BIT(KC_RSHIFT));
+              }
+              else
+              {
+              }
+            }
+            //add_one_shot_mod(MOD_LSFT);
+            break;
     }
 }
 
