@@ -101,7 +101,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         GRV, 1,   2,   3,   4,   5,   F5,
         TAB, Q,   W,   E,   R,   T,   NO,
         ESC, A,   S,   D,   F,   G,
-        LSFT,Z,   X,   C,   V,   B,   NO,
+        FN10,Z,   X,   C,   V,   B,   NO,
         FN1,FN4,FN2,LEFT,FN10,
                                       LGUI,LALT,
                                            LGUI,
@@ -110,7 +110,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              F6, 6,   7,   8,   9,   0,   MINS,
              NO ,Y,   U,   I,   O,   P,   BSLS,
                   H,   J,   K,   L,   SCLN,QUOT,
-             NO, N,   M,   COMM,DOT, SLSH,RSFT,
+             NO, N,   M,   COMM,DOT, SLSH,FN10,
                        LEFT,DOWN,UP,  RGHT,F12,
         RALT,RGUI,
         RGUI,
@@ -348,10 +348,14 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* id for user defined functions */
 enum function_id {
     TEENSY_KEY,
-    ONE_SHOT_SHIFT,
-    ONE_SHOT_ALT,
-    ONE_SHOT_CTRL,
-    ONE_SHOT_META,
+    ONE_SHOT_LSHIFT,
+    ONE_SHOT_LALT,
+    ONE_SHOT_LCTRL,
+    ONE_SHOT_LMETA,
+    ONE_SHOT_RSHIFT,
+    ONE_SHOT_RALT,
+    ONE_SHOT_RCTRL,
+    ONE_SHOT_RMETA,
     ONE_SHOT_BLUESHIFT,
 };
 
@@ -383,10 +387,10 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_MACRO_TAP(LSHIFT_RBRACE),                // FN8
 
     ACTION_LAYER_TAP_KEY(1, KC_F),                  // FN9 = layer push for blueshift on F.
-    ACTION_FUNCTION_TAP(ONE_SHOT_SHIFT),            // FN10 = One shot shift.
+    ACTION_FUNCTION_TAP(ONE_SHOT_SHIFT),            // FN10 = One shot shift as user function.
 
     ACTION_MODS_TAP_KEY(MOD_LSFT, KC_FN12),         // FN11 = LShift with tap Tab
-    ACTION_MODS_ONESHOT(MOD_LSFT),
+    ACTION_MODS_ONESHOT(MOD_LSFT),                  // FN12
     ACTION_MODS_TAP_KEY(MOD_LALT, KC_SPC),          // FN13 = LAlt   with tap Space
     ACTION_MODS_TAP_KEY(MOD_LGUI, KC_ESC),          // FN14 = LGui   with tap Escape
     ACTION_MODS_TAP_KEY(MOD_RSFT, KC_QUOT),         // FN15 = RShift with tap quotes
