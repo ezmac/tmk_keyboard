@@ -14,44 +14,30 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * Keymap: Default Layer in QWERTY
      *
      * ,--------------------------------------------------.           ,--------------------------------------------------.
-     * |   ~    |   1  |   2  |   3  |   4  |   5  |   \  |           |   -  |   6  |   7  |   8  |   9  |   0  |   =    |
+     * |   ~    |   1  |   2  |   3  |   4  |   5  |  F5  |           |  F6  |   6  |   7  |   8  |   9  |   0  |   -    |
      * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
-     * | Tab    |   Q  |   W  |   E  |   R  |   T  | ~L5  |           | ~L6  |   Y  |   U  |   I  |   O  |   P  |   [    |
+     * | Tab    |   Q  |   W  |   E  |   R  |   T  |      |           |      |   Y  |   U  |   I  |   O  |   P  |   \    |
      * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
-     * | Tab/Shf|   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |   '    |
-     * |--------+------+------+------+------+------|  L0  |           | ~L7  |------+------+------+------+------+--------|
+     * | Esc    |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |   '    |
+     * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
      * | LCtrl  |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  |   ]    |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-     *   | ~L5  | ~L2  | Caps | LAlt | LGui |                                       |  Lft |  Up  |  Dn  | Rght | ~L6  |
+     *   | ~L1  | +L2  | Caps | LAlt | LGui |                                       |  Lft |  Up  |  Dn  | Rght | ~L6  |
      *   `----------------------------------'                                       `----------------------------------'
      *                                        ,-------------.       ,-------------.
-     *                                        | +L2  | Home |       | PgUp | Del  |
+     *                                        | ???  | LALT |       | RALT | ???  |
      *                                 ,------|------|------|       |------+------+------.
-     *                                 |      |      |  End |       | PgDn |      |      |
-     *                                 | BkSp |  ESC |------|       |------| Enter| Space|
-     *                                 |      |      |  Spc |       | Ins  |      |      |
+     *                                 |      |      | LMETA|       | RMETA|      |      |
+     *                                 | BkSp |  ~L1 |------|       |------|  ~L1 | Space|
+     *                                 |      |      | LCTRL|       | RCTRL|      |      |
      *                                 `--------------------'       `--------------------'
      *
      *
      *
      ****************************************************************************************************
      *
-     * Under XOrg, I use my own mapping from QWERTY to "Workman for Programmers"
-     * See XOrg files in ./addons/ subdirectory.
-     *
-     * I have to do so, because of two things:
-     * 1) my native language is Russian, and XOrg keymap for it is based on QWERTY layout
-     * 2) I want to have non-standart shifted keys, like $ (as normal) and @ (as shifted), or _ and -
-     *
-     * And even if (2) could be solved using FN* keys (but there is limit in firmware for only 32 such
-     * keys), then (1) can't be solved at firmware level at all.
-     *
-     * So, I have to stick with QWERTY as my main layout + my own XOrg keyboard layout for English.
-     * But sometimes I have to input something when XOrg is not active - for example, in Linux console,
-     * or in firmware console (while debugging firmware), or when keyboard is connected to not my computer.
-     *
-     * For such cases I have Layer1 :)
-     * // hint: switch to Layer1 is only at Layer6
+     * This layout is based off "Blueshift".  There should be a link, but a google for ergodox and blueshift should get it.
+     * I may have missed a few keys or changed them and not updated the docs
      *
      ****************************************************************************************************
      *
@@ -60,7 +46,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * Keymap: Default Layer in Workman
      *
      * ,--------------------------------------------------.           ,--------------------------------------------------.
-     * |  ~     |   ;  |   !  |   #  |   {  |   }  |   '  |           |   ^  |   [  |   ]  |   *  |   (  |   )  |   =    |
+     * |  ~     |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  |   ??   |
      * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
      * | Tab    |   Q  |   D  |   R  |   W  |   B  |  NO  |           | ~L7  |   J  |   F  |   U  |   P  |   $  |   :    |
      * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -71,11 +57,11 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *   | ~L5  | ~L2  | Caps | LAlt | LGui |                                       |  Lft |  Up  |  Dn  | Rght | ~L6  |
      *   `----------------------------------'                                       `----------------------------------'
      *                                        ,-------------.       ,-------------.
-     *                                        |  L0  |  +L2 |       | PgUp | Del  |
+     *                                        | TRNS | TRNS |       | TRNS | ???  |
      *                                 ,------|------|------|       |------+------+------.
-     *                                 |      |      |  NO  |       | PgDn |      |      |
-     *                                 | BkSp |  ESC |------|       |------| Enter| Space|
-     *                                 |      |      |  Spc |       | Ins  |      |      |
+     *                                 |      |      | TRNS |       | TRNS |      |      |
+     *                                 | ESC  |  ~L1 |------|       |------|  ~L1 | Enter|
+     *                                 |      |      | TRNS |       | TRNS |      |      |
      *                                 `--------------------'       `--------------------'
      *
      * Keymap: Default Layer in Workman / with Shift
@@ -372,8 +358,8 @@ enum function_id {
 enum macro_id {
     LSHIFT_LBRACE,
     LSHIFT_RBRACE,
-    LSHIFT_LPAREN,
-    LSHIFT_RPAREN,
+    LSHIFT_LT,
+    LSHIFT_GT,
     HELLO,
     VOLUP,
 };
@@ -385,22 +371,22 @@ enum macro_id {
 static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
-    ACTION_LAYER_MOMENTARY(1),                     // FN1 - Toggle layer one
-    ACTION_LAYER_ON(2, ON_PRESS),                             // FN2 - Push layer 2
+    ACTION_LAYER_MOMENTARY(1),                      // FN1 - Toggle layer one
+    ACTION_LAYER_ON(2, ON_PRESS),                   // FN2 - Push layer 2
     ACTION_LAYER_OFF(2, ON_PRESS),                            // FN3 - Pop layer 2
     ACTION_LAYER_MOMENTARY(4),                      // FN4 - Toggle layer four 
 
 
-    ACTION_MACRO_TAP(LSHIFT_LPAREN),
-    ACTION_MACRO_TAP(LSHIFT_RPAREN),
-    ACTION_MACRO_TAP(LSHIFT_LBRACE),
-    ACTION_MACRO_TAP(LSHIFT_RBRACE),
+    ACTION_MACRO_TAP(LSHIFT_LT),                    // FN5
+    ACTION_MACRO_TAP(LSHIFT_GT),                    // FN6
+    ACTION_MACRO_TAP(LSHIFT_LBRACE),                // FN7
+    ACTION_MACRO_TAP(LSHIFT_RBRACE),                // FN8
 
     ACTION_LAYER_TAP_KEY(1, KC_F),                  // FN9 = layer push for blueshift on F.
-    ACTION_FUNCTION(LSHIFT_LPAREN),                // FN10 = One shot shift.
+    ACTION_FUNCTION_TAP(ONE_SHOT_SHIFT),            // FN10 = One shot shift.
 
-    ACTION_MODS_TAP_KEY(MOD_LSFT, KC_TAB),          // FN11 = LShift with tap Tab
-    ACTION_MODS_TAP_KEY(MOD_LCTL, KC_GRV),          // FN12 = LCtrl  with tap Tilda
+    ACTION_MODS_TAP_KEY(MOD_LSFT, KC_FN12),         // FN11 = LShift with tap Tab
+    ACTION_MODS_ONESHOT(MOD_LSFT),
     ACTION_MODS_TAP_KEY(MOD_LALT, KC_SPC),          // FN13 = LAlt   with tap Space
     ACTION_MODS_TAP_KEY(MOD_LGUI, KC_ESC),          // FN14 = LGui   with tap Escape
     ACTION_MODS_TAP_KEY(MOD_RSFT, KC_QUOT),         // FN15 = RShift with tap quotes
@@ -426,7 +412,6 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_LAYER_TAP_KEY(8, KC_D),                  // FN30 = momentary Layer8 on D key, to use with mouse and navigation keys
     ACTION_LAYER_TAP_KEY(2, KC_F),                  // FN31 = momentary Layer2 on F key, to use with Numpad keys
 };
-
 
 
 

@@ -391,12 +391,12 @@ These actions call user defined function with `id`, `opt`, and key event informa
 #### 2.4.1 Function
 To define normal `Function` action in keymap use this.
 
-    ACTION_FUNCTION(id, opt)
+    ACTION_FUNCTION(id)
 
 #### 2.4.2 Function with tap
-To define tappable `Function` action in keymap use this.
+To define tappable `Function` action in keymap use this. If `Function` action is not tappable, tap count is zero.
 
-    ACTION_FUNCTION_TAP(id, opt)
+    ACTION_FUNCTION_TAP(id)
 
 #### 2.4.3 Implement user function
 `Function` actions can be defined freely with C by user in callback function:
