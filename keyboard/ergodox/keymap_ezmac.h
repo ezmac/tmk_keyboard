@@ -9,6 +9,7 @@
 #include "debug.h"
 #include "keymap.h"
 #define ONESHOTMOD_REFERENCE_LAYER 9
+#define ONESHOT_TIMEOUT 0
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
      * Keymap: Default Layer in QWERTY
@@ -100,7 +101,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // left hand
         GRV, 1,   2,   3,   4,   5,   F5,
         TAB, Q,   W,   E,   R,   T,   GRV,
-        ESC, A,   S,   D,   F,   G,
+        FN13, A,   S,   D,   F,   G,
         FN10,Z,   X,   C,   V,   B,   LSFT,
         FN3,FN4,FN2,LALT,LCTRL,
                                       LGUI,FN10,
@@ -396,6 +397,7 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_LAYER_TOGGLE(2),                         // FN2 - Push layer 2
     ACTION_LAYER_MOMENTARY(3),                      // FN3 - Momentary toggle layer three
     ACTION_LAYER_MOMENTARY(4),                      // FN4 - Toggle layer four 
+
 
 
     ACTION_MACRO_TAP(LSHIFT_LT),                    // FN5 - <

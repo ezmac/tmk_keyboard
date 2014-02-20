@@ -36,9 +36,8 @@ Project located at <https://github.com/benblazak/ergodox-firmware>
 #define MATRIX_ROWS 14
 #define MATRIX_COLS 6
  
-// define the number of taps it takes to toggle
-#define TAPPING_TOGGLE 2
-#define TAPPING_TERM    300
+#define TAPPING_TOGGLE 1
+#define TAPPING_TERM    200
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
@@ -62,7 +61,7 @@ Project located at <https://github.com/benblazak/ergodox-firmware>
 
 /* key combination for command */
 #define IS_COMMAND() ( \
-    keyboard_report->mods == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)) \
+    keyboard_report->mods == (MOD_BIT(KC_LCTRL) | MOD_BIT(KC_RCTRL)) \
 )
 
 
