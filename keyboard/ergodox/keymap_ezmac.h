@@ -8,7 +8,7 @@
 #include "host.h"
 #include "debug.h"
 #include "keymap.h"
-
+#define ONESHOTMOD_REFERENCE_LAYER 9
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
      * Keymap: Default Layer in QWERTY
@@ -103,18 +103,18 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         ESC, A,   S,   D,   F,   G,
         FN10,Z,   X,   C,   V,   B,   NO,
         FN1,FN4,FN2,LEFT,FN10,
-                                      LGUI,LALT,
-                                           LGUI,
-                                 BSPACE, FN1, LCTRL,
+                                      LGUI,FN10,
+                                           FN10,
+                              BSPACE, FN1, FN10,
         // right hand
              F6, 6,   7,   8,   9,   0,   MINS,
              NO ,Y,   U,   I,   O,   P,   BSLS,
                   H,   J,   K,   L,   SCLN,QUOT,
              NO, N,   M,   COMM,DOT, SLSH,FN10,
-                       LEFT,DOWN,UP,  RGHT,F12,
-        RALT,RGUI,
-        RGUI,
-        RCTRL, FN1, SPACE
+                       LEFT,DOWN,UP,  RGHT,F11,
+        FN10,RGUI,
+        FN10,
+        FN10, FN1, SPACE
     ),
 
     KEYMAP(  // Layer1: blueshift
@@ -298,6 +298,28 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,TRNS,TRNS
     ),
 
+    KEYMAP(  // Layer9: Part of tapshot modifier hack.
+        // layer9 modifiers are sourced by the handle_one_shot_mod_action function
+        // left hand
+        TRNS,NO,  NO,  NO,  NO,  NO,  NO,
+        TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
+        TRNS,NO,  NO,  TRNS,NO,  NO,
+        TRNS,NO,  NO,  TRNS,NO,  NO,  TRNS,
+        LSFT,TRNS,TRNS,TRNS,TRNS,
+                                      TRNS,LALT,
+                                           LGUI,
+                                 TRNS,TRNS,LCTL,
+
+        // right hand
+             TRNS,NO,  NO,  NO,  NO,  NO,  NO,
+             TRNS,BTN2,WH_L,WH_U,WH_D,WH_R,PGUP,
+                  BTN1,MS_L,MS_U,MS_D,MS_R,PGDN,
+             TRNS,BTN3,HOME,END, DEL, INS, RSFT,
+                       TRNS,TRNS,TRNS,TRNS,TRNS,
+        RALT,TRNS,
+        RGUI,
+        RCTL,TRNS,TRNS
+    ),
 /*
     // templates to copy from
 
@@ -387,7 +409,7 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_MACRO_TAP(LSHIFT_RBRACE),                // FN8
 
     ACTION_LAYER_TAP_KEY(1, KC_F),                  // FN9 = layer push for blueshift on F.
-    ACTION_FUNCTION_TAP(ONE_SHOT_SHIFT),            // FN10 = One shot shift as user function.
+    ACTION_FUNCTION_TAP(ONE_SHOT_LSHIFT),            // FN10 = One shot shift.
 
     ACTION_MODS_TAP_KEY(MOD_LSFT, KC_FN12),         // FN11 = LShift with tap Tab
     ACTION_MODS_ONESHOT(MOD_LSFT),                  // FN12

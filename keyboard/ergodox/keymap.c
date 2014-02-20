@@ -250,24 +250,39 @@ void var_dump_keyrecord(keyrecord_t *record)
 //TODO: Make this take the modifier key.  Figure out if this should handle the event with a name like add.
 void handle_one_shot_mod_action(keyrecord_t *record)
 {  
+  dprint("HOSMA");
   keyevent_t event = record->event;
   tap_t tap = record->tap;
-  if (event.pressed) {
-    if (tap.count == 0 || tap.interrupted) {
-      add_mods(MOD_BIT(KC_LSHIFT));
+  key_t key = event.key;
+  uint8_t pressed_keycode = keymap_key_to_keycode(ONESHOTMOD_REFERENCE_LAYER, key);
+  uint8_t mod_key = MOD_BIT(pressed_keycode);
+
+  var_dump_keyrecord(record);
+  xprintf("Key row: %d", key.row);
+  xprintf("Key col: %d", key.col);
+  xprintf("Is Mod: %d", IS_MOD(pressed_keycode));
+
+
+
+  if IS_MOD(pressed_keycode){
+
+    if (event.pressed) {
+      if (tap.count == 0 || tap.interrupted) {
+        add_mods(mod_key);
+      } else {
+        set_oneshot_mods(mod_key);
+      }
     } else {
-      set_oneshot_mods(MOD_LSFT);
-    }
-  } else {
-    if (tap.count == 0 || tap.interrupted) {
-      clear_oneshot_mods(MOD_LSFT);
-      del_mods(MOD_BIT(KC_LSHIFT));
-    }
-    else
-    {
+      if (tap.count == 0 || tap.interrupted) {
+        clear_oneshot_mods(mod_key);
+        del_mods(mod_key);
+      }
+      else
+      {
+      }
     }
   }
-)
+} 
 void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
     keyevent_t event = record->event;
@@ -287,22 +302,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
         case ONE_SHOT_LSHIFT:
             // NOTE: cant use register_code to avoid conflicting with magic key bind
             //this is basically how ACTION_MODS_TAP_KEY works.
-            if (event.pressed) {
-              if (tap.count == 0 || tap.interrupted) {
-                add_mods(MOD_BIT(KC_LSHIFT));
-              } else {
-                set_oneshot_mods(MOD_LSFT);
-              }
-            } else {
-              if (tap.count == 0 || tap.interrupted) {
-                del_mods(MOD_BIT(KC_LSHIFT));
-              }
-              else
-              {
-                clear_oneshot_mods(MOD_LSFT);
-              }
-            }
-            //add_one_shot_mod(MOD_LSFT);
+            handle_one_shot_mod_action(record);
             break;
         case ONE_SHOT_RSHIFT:
             // NOTE: cant use register_code to avoid conflicting with magic key bind
@@ -321,7 +321,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
               }
               else
               {
-                clear_oneshot_mods(MOD_RSFT)
+                clear_oneshot_mods(MOD_RSFT);
               }
             }
             //add_one_shot_mod(MOD_LSFT);
@@ -343,7 +343,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
               }
               else
               {
-                clear_oneshot_mods(MOD_RSFT)
+                clear_oneshot_mods(MOD_RSFT);
               }
             }
             //add_one_shot_mod(MOD_LSFT);
