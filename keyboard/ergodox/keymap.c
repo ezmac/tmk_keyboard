@@ -269,16 +269,16 @@ void handle_one_shot_mod_action(keyrecord_t *record)
   if IS_MOD(pressed_keycode){
 
     if (event.pressed) {
+      register_code(pressed_keycode);
       if (tap.count == 0 || tap.interrupted) {
         xprintf("** adding mod, should be holding key\n");
-        add_mods(mod_key);
       } else {
         add_oneshot_mods(mod_key);
         xprintf("** setting mod, should be tapping key. tap.count was %d\n",tap.count);
       }
     } else {
+      unregister_code(pressed_keycode);
       if (tap.count == 0 || tap.interrupted) {
-        del_mods(mod_key);
         xprintf("** deleting mod, should be releasing from heldkey\n");
       }
       else{
@@ -309,16 +309,24 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             print("not supported.\n");
             break;
         case ESCAPE_WRAPPER:
-            xprintf("escape_wrapper called");
-            if (get_oneshot_mods() !=0)
             {
-              xprintf("clearing oneshot mods");
-              clear_oneshot_mods();
-            }
-            else
-            {
-              xprintf("exec escape");
-              action_exec(event);
+                if (event.pressed) {
+                    uint8_t osm = has_any_oneshot_mods();
+                    xprintf("escape_wrapper called\n Oneshot mods are: %d\n", osm);
+                    if (osm !=0)
+                    {
+                      xprintf("clearing oneshot mods\n");
+                      clear_oneshot_mods();
+                      xprintf("oneshot mods are now %d\n", get_oneshot_mods());
+                    }
+                    else
+                    {
+                      xprintf("exec escape\n");
+                      register_code(KC_ESC);
+                    }
+                } else {
+                  // key was released
+                }
 
             }
             break;
@@ -338,22 +346,12 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 
     switch (id) {
         case FAT_ARROW:
-            if (tap.count > 0 && !tap.interrupted) {
-                return (event.pressed ?
-                        MACRO( T(EQUAL), D(LSHIFT), T(DOT), U(LSHIFT), END ) : MACRO_NONE);
-            } else {
-                return (event.pressed ?
-                        MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
-            }
+            return (event.pressed ?
+                    MACRO( T(EQUAL), D(LSHIFT), T(DOT), U(LSHIFT), END ) : MACRO_NONE);
             break;
         case THIN_ARROW:
-            if (tap.count > 0 && !tap.interrupted) {
                 return (event.pressed ?
                         MACRO( T(MINS), D(LSHIFT), T(DOT), U(LSHIFT), END ) : MACRO_NONE);
-            } else {
-                return (event.pressed ?
-                        MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
-            }
             break;
         case LSHIFT_LBRACE:
             if (tap.count > 0 && !tap.interrupted) {

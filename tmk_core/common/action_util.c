@@ -147,6 +147,10 @@ uint8_t get_oneshot_mods()
  * desc |Lcontrol|Lshift  |Lalt    |Lgui    |Rcontrol|Rshift  |Ralt    |Rgui
  *
  */
+uint8_t has_any_oneshot_mods()
+{
+  return bitpop(oneshot_mods);
+}
 void add_oneshot_mods(uint8_t mods)
 {
   xprintf("Adding mod %d to current mods %d\n", mods, oneshot_mods);
@@ -178,7 +182,6 @@ uint8_t has_anymod(void)
 {
     return bitpop(real_mods);
 }
-
 uint8_t get_first_key(void)
 {
 #ifdef NKRO_ENABLE

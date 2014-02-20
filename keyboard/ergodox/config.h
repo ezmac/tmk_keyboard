@@ -42,9 +42,8 @@ Project located at <https://github.com/benblazak/ergodox-firmware>
 #define MOUSEKEY_TIME_TO_MAX    10
 
  
-// define the number of taps it takes to toggle
-#define TAPPING_TOGGLE 2
-#define TAPPING_TERM    300
+#define TAPPING_TOGGLE 1
+#define TAPPING_TERM    200
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
@@ -68,8 +67,7 @@ Project located at <https://github.com/benblazak/ergodox-firmware>
 
 /* key combination for command */
 #define IS_COMMAND() ( \
-    keyboard_report->mods == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || \
-    keyboard_report->mods == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)) \
+    keyboard_report->mods == (MOD_BIT(KC_LCTRL) | MOD_BIT(KC_RCTRL)) \
 )
 
 
