@@ -238,6 +238,9 @@ void var_dump_keyrecord(keyrecord_t *record)
     keyEvent:\n\
         \tpressed: %d\n\
         \ttime: %u\n\
+        \tkey:\n\
+        \t\trow: %d\n\
+        \t\tcol: %d\n\
     tap:\n\
         \tinterrupted: %d\n\
         \treserved2: %d\n\
@@ -245,7 +248,7 @@ void var_dump_keyrecord(keyrecord_t *record)
         \treserved0: %d\n\
         \ttap_count: %d\n\
         "
-    ,event.pressed, event.time, tap.interrupted, tap.reserved2, tap.reserved1, tap.reserved0, tap.count);
+    ,event.pressed, event.time, event.key.row, event.key.col, tap.interrupted, tap.reserved2, tap.reserved1, tap.reserved0, tap.count);
 }
 //TODO: Make this take the modifier key.  Figure out if this should handle the event with a name like add.
 void handle_one_shot_mod_action(keyrecord_t *record)
@@ -258,29 +261,35 @@ void handle_one_shot_mod_action(keyrecord_t *record)
   uint8_t mod_key = MOD_BIT(pressed_keycode);
 
   var_dump_keyrecord(record);
-  xprintf("Key row: %d", key.row);
-  xprintf("Key col: %d", key.col);
-  xprintf("Is Mod: %d", IS_MOD(pressed_keycode));
+  xprintf("pressed_keycode is: %d. mod_key is %d\n",pressed_keycode, mod_key);
 
 
-
+// for some reason, the released key sent to the os is the lower case version
+  // also, if key is held, the OS does not receive it until another key is pressed.  This affects shift clicking.
   if IS_MOD(pressed_keycode){
 
     if (event.pressed) {
       if (tap.count == 0 || tap.interrupted) {
+        xprintf("** adding mod, should be holding key\n");
         add_mods(mod_key);
       } else {
-        set_oneshot_mods(mod_key);
+        add_oneshot_mods(mod_key);
+        xprintf("** setting mod, should be tapping key. tap.count was %d\n",tap.count);
       }
     } else {
       if (tap.count == 0 || tap.interrupted) {
-        clear_oneshot_mods(mod_key);
         del_mods(mod_key);
+        xprintf("** deleting mod, should be releasing from heldkey\n");
       }
-      else
-      {
+      else{
+        //clear_oneshot_mods(mod_key);
+        xprintf("** mod_key should be releasing. No action required\n tap.count was %d\n",tap.count);
       }
     }
+  }
+  else
+  {
+    xprintf("Was not a mod key");
   }
 } 
 void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
@@ -299,75 +308,24 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             bootloader_jump(); // should not return
             print("not supported.\n");
             break;
-        case ONE_SHOT_LSHIFT:
+        case ESCAPE_WRAPPER:
+            xprintf("escape_wrapper called");
+            if (get_oneshot_mods() !=0)
+            {
+              xprintf("clearing oneshot mods");
+              clear_oneshot_mods();
+            }
+            else
+            {
+              xprintf("exec escape");
+              action_exec(event);
+
+            }
+            break;
+        case ONE_SHOT_MOD:
             // NOTE: cant use register_code to avoid conflicting with magic key bind
             //this is basically how ACTION_MODS_TAP_KEY works.
             handle_one_shot_mod_action(record);
-            break;
-        case ONE_SHOT_RSHIFT:
-            // NOTE: cant use register_code to avoid conflicting with magic key bind
-            //this is basically how ACTION_MODS_TAP_KEY works when given a FN that one shots the modifier.
-            if (event.pressed) {
-              if (tap.count == 0 || tap.interrupted) {
-                add_mods(MOD_BIT(KC_RSHIFT));
-              } else {
-                set_oneshot_mods(MOD_RSFT);
-              }
-            } else {
-              if (tap.count == 0 || tap.interrupted) {
-                //Are both of these necessary or even wanted?
-                //clear_oneshot_mods(MOD_RSFT);
-                del_mods(MOD_BIT(KC_RSHIFT));
-              }
-              else
-              {
-                clear_oneshot_mods(MOD_RSFT);
-              }
-            }
-            //add_one_shot_mod(MOD_LSFT);
-            break;
-        case ONE_SHOT_LCTRL:
-            // NOTE: cant use register_code to avoid conflicting with magic key bind
-            //this is basically how ACTION_MODS_TAP_KEY works when given a FN that one shots the modifier.
-            if (event.pressed) {
-              if (tap.count == 0 || tap.interrupted) {
-                add_mods(MOD_BIT(KC_RCTRL));
-              } else {
-                set_oneshot_mods(MOD_RCTL);
-              }
-            } else {
-              if (tap.count == 0 || tap.interrupted) {
-                //Are both of these necessary or even wanted?
-                //clear_oneshot_mods(MOD_RSFT);
-                del_mods(MOD_BIT(KC_RCTRL));
-              }
-              else
-              {
-                clear_oneshot_mods(MOD_RSFT);
-              }
-            }
-            //add_one_shot_mod(MOD_LSFT);
-            break;
-        case ONE_SHOT_RCTRL:
-            // NOTE: cant use register_code to avoid conflicting with magic key bind
-            //this is basically how ACTION_MODS_TAP_KEY works when given a FN that one shots the modifier.
-            if (event.pressed) {
-              if (tap.count == 0 || tap.interrupted) {
-                add_mods(MOD_BIT(KC_RSHIFT));
-              } else {
-                set_oneshot_mods(MOD_RSFT);
-              }
-            } else {
-              if (tap.count == 0 || tap.interrupted) {
-                //Are both of these necessary or even wanted?
-                //clear_oneshot_mods(MOD_RSFT);
-                del_mods(MOD_BIT(KC_RSHIFT));
-              }
-              else
-              {
-              }
-            }
-            //add_one_shot_mod(MOD_LSFT);
             break;
     }
 }
@@ -379,6 +337,24 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
     tap_t tap = record->tap;
 
     switch (id) {
+        case FAT_ARROW:
+            if (tap.count > 0 && !tap.interrupted) {
+                return (event.pressed ?
+                        MACRO( T(EQUAL), D(LSHIFT), T(DOT), U(LSHIFT), END ) : MACRO_NONE);
+            } else {
+                return (event.pressed ?
+                        MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
+            }
+            break;
+        case THIN_ARROW:
+            if (tap.count > 0 && !tap.interrupted) {
+                return (event.pressed ?
+                        MACRO( T(MINS), D(LSHIFT), T(DOT), U(LSHIFT), END ) : MACRO_NONE);
+            } else {
+                return (event.pressed ?
+                        MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
+            }
+            break;
         case LSHIFT_LBRACE:
             if (tap.count > 0 && !tap.interrupted) {
                 return (event.pressed ?
@@ -387,6 +363,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 return (event.pressed ?
                         MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
             }
+            break;
         case LSHIFT_RBRACE:
             if (tap.count > 0 && !tap.interrupted) {
                 return (event.pressed ?
@@ -395,6 +372,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 return (event.pressed ?
                         MACRO( D(RSHIFT), END ) : MACRO( U(RSHIFT), END ) );
             }
+            break;
         case LSHIFT_LT:
             if (tap.count > 0 && !tap.interrupted) {
                 return (event.pressed ?
@@ -403,6 +381,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 return (event.pressed ?
                         MACRO( D(LSHIFT), END ) : MACRO( U(LSHIFT), END ) );
             }
+            break;
         case LSHIFT_GT:
             if (tap.count > 0 && !tap.interrupted) {
                 return (event.pressed ?
@@ -411,14 +390,17 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 return (event.pressed ?
                         MACRO( D(RSHIFT), END ) : MACRO( U(RSHIFT), END ) );
             }
+            break;
         case HELLO:
             return (event.pressed ?
                     MACRO( I(0), T(H), T(E), T(L), T(L), W(255), T(O), END ) :
                     MACRO_NONE );
+            break;
         case VOLUP:
             return (event.pressed ?
                     MACRO( D(VOLU), U(VOLU), END ) :
                     MACRO_NONE );
+            break;
     }
     return MACRO_NONE;
 }

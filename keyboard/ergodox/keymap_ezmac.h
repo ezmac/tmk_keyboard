@@ -99,19 +99,19 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KEYMAP(  // Layer0: default
         // left hand
         GRV, 1,   2,   3,   4,   5,   F5,
-        TAB, Q,   W,   E,   R,   T,   NO,
+        TAB, Q,   W,   E,   R,   T,   GRV,
         ESC, A,   S,   D,   F,   G,
-        FN10,Z,   X,   C,   V,   B,   NO,
-        FN1,FN4,FN2,LEFT,FN10,
+        FN10,Z,   X,   C,   V,   B,   LSFT,
+        FN3,FN4,FN2,LALT,LCTRL,
                                       LGUI,FN10,
                                            FN10,
                               BSPACE, FN1, FN10,
         // right hand
              F6, 6,   7,   8,   9,   0,   MINS,
-             NO ,Y,   U,   I,   O,   P,   BSLS,
+             MINS ,Y,   U,   I,   O,   P,   BSLS,
                   H,   J,   K,   L,   SCLN,QUOT,
-             NO, N,   M,   COMM,DOT, SLSH,FN10,
-                       LEFT,DOWN,UP,  RGHT,F11,
+             RSFT, N,   M,   COMM,DOT, SLSH,FN10,
+                       RCTRL,RALT,FN13,  FN4,F12,
         FN10,RGUI,
         FN10,
         FN10, FN1, SPACE
@@ -120,7 +120,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KEYMAP(  // Layer1: blueshift
         // left hand
         NO, F1, F2, F3, F4, F5, F6, 
-        TRNS, NO, NO, NO, NO, NO, TRNS,
+        TRNS, FN11, FN12, NO, NO, NO, TRNS,
         TRNS, FN5, FN6, NO, NO, NO,
         TRNS,NO, NO, NO, NO, NO, TRNS,
         TRNS,TRNS,TRNS,TRNS,TRNS,
@@ -144,7 +144,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
         TRNS,NO,  NO,  NO,  TRNS,NO,
         TRNS,NO,  NO,  NO,  TRNS,NO,  TRNS,
-        TRNS,TRNS,FN3,TRNS,TRNS,
+        TRNS,TRNS,FN2,TRNS,TRNS,
                                       TRNS,TRNS,
                                            TRNS,
                                  TRNS,TRNS,TRNS,
@@ -159,7 +159,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,TRNS,TRNS
     ),
 
-    KEYMAP(  // Layer3: F-keys + PgUp/PgDn on right hand, leftled:green
+    KEYMAP(  // Layer3: experimental mouse key layer
         // left hand
         TRNS,NO,  NO,  NO,  NO,  NO,  NO,
         TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
@@ -170,11 +170,11 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                            TRNS,
                                  LCTL,LSFT,TRNS,
         // right hand
-             NO,  NO,  NO,  NO,  NO,  NO,  TRNS,
-             TRNS,NO,  F1,  F2,  F3,  F4,  PGUP,
-                  NO,  F5,  F6,  F7,  F8,  PGDN,
-             TRNS,NO,  F9,  F10, F11, F12, APP,
-                       RGUI,RALT,TRNS,TRNS,TRNS,
+             TRNS,NO,  NO,  NO,  NO,  NO,  NO,
+             TRNS,BTN2,WH_L,WH_U,WH_D,WH_R,PGUP,
+                  BTN1,MS_L,MS_U,MS_D,MS_R,PGDN,
+             TRNS,BTN3,HOME,END, DEL, INS, NO,
+                       TRNS,TRNS,TRNS,TRNS,TRNS,
         TRNS,TRNS,
         TRNS,
         TRNS,RSFT,RCTL
@@ -199,7 +199,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //
 
         // right hand
-             NO,  NO,  NO,  NO,  NO,  NO,  PPLS,
+             NO,  NO,  NO,  NO,  NO,  NO,  FN0,
              TRNS,MINS,4,   5,   9,   0,   EQL,
                   BSLS,2,   P,   FN1, 1,   FN2,
              TRNS,3,   6,   FN3, FN4, 7,   FN2,
@@ -304,11 +304,11 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,NO,  NO,  NO,  NO,  NO,  NO,
         TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
         TRNS,NO,  NO,  TRNS,NO,  NO,
-        TRNS,NO,  NO,  TRNS,NO,  NO,  TRNS,
-        LSFT,TRNS,TRNS,TRNS,TRNS,
+        LSFT,NO,  NO,  TRNS,NO,  NO,  TRNS,
+        TRNS,TRNS,TRNS,TRNS,TRNS,
                                       TRNS,LALT,
                                            LGUI,
-                                 TRNS,TRNS,LCTL,
+                                 TRNS,FN1,LCTL,
 
         // right hand
              TRNS,NO,  NO,  NO,  NO,  NO,  NO,
@@ -318,7 +318,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                        TRNS,TRNS,TRNS,TRNS,TRNS,
         RALT,TRNS,
         RGUI,
-        RCTL,TRNS,TRNS
+        RCTL,FN1,TRNS
     ),
 /*
     // templates to copy from
@@ -370,15 +370,8 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* id for user defined functions */
 enum function_id {
     TEENSY_KEY,
-    ONE_SHOT_LSHIFT,
-    ONE_SHOT_LALT,
-    ONE_SHOT_LCTRL,
-    ONE_SHOT_LMETA,
-    ONE_SHOT_RSHIFT,
-    ONE_SHOT_RALT,
-    ONE_SHOT_RCTRL,
-    ONE_SHOT_RMETA,
-    ONE_SHOT_BLUESHIFT,
+    ONE_SHOT_MOD,
+    ESCAPE_WRAPPER
 };
 
 enum macro_id {
@@ -388,6 +381,8 @@ enum macro_id {
     LSHIFT_GT,
     HELLO,
     VOLUP,
+    FAT_ARROW,
+    THIN_ARROW
 };
 
 
@@ -397,23 +392,23 @@ enum macro_id {
 static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
-    ACTION_LAYER_MOMENTARY(1),                      // FN1 - Toggle layer one
-    ACTION_LAYER_ON(2, ON_PRESS),                   // FN2 - Push layer 2
-    ACTION_LAYER_OFF(2, ON_PRESS),                            // FN3 - Pop layer 2
+    ACTION_LAYER_MOMENTARY(1),                      // FN1 - Momentary toggle layer one
+    ACTION_LAYER_TOGGLE(2),                         // FN2 - Push layer 2
+    ACTION_LAYER_MOMENTARY(3),                      // FN3 - Momentary toggle layer three
     ACTION_LAYER_MOMENTARY(4),                      // FN4 - Toggle layer four 
 
 
-    ACTION_MACRO_TAP(LSHIFT_LT),                    // FN5
-    ACTION_MACRO_TAP(LSHIFT_GT),                    // FN6
-    ACTION_MACRO_TAP(LSHIFT_LBRACE),                // FN7
-    ACTION_MACRO_TAP(LSHIFT_RBRACE),                // FN8
+    ACTION_MACRO_TAP(LSHIFT_LT),                    // FN5 - <
+    ACTION_MACRO_TAP(LSHIFT_GT),                    // FN6 - >
+    ACTION_MACRO_TAP(LSHIFT_LBRACE),                // FN7 - {
+    ACTION_MACRO_TAP(LSHIFT_RBRACE),                // FN8 - }
 
     ACTION_LAYER_TAP_KEY(1, KC_F),                  // FN9 = layer push for blueshift on F.
-    ACTION_FUNCTION_TAP(ONE_SHOT_LSHIFT),            // FN10 = One shot shift.
+    ACTION_FUNCTION_TAP(ONE_SHOT_MOD),           // FN10 = One shot shift.
 
-    ACTION_MODS_TAP_KEY(MOD_LSFT, KC_FN12),         // FN11 = LShift with tap Tab
-    ACTION_MODS_ONESHOT(MOD_LSFT),                  // FN12
-    ACTION_MODS_TAP_KEY(MOD_LALT, KC_SPC),          // FN13 = LAlt   with tap Space
+    ACTION_MACRO(FAT_ARROW),                        // FN11 = Fat arrow =>
+    ACTION_MACRO(THIN_ARROW),                       // FN12 = Thin arrow ->
+    ACTION_FUNCTION(ESCAPE_WRAPPER),                // FN13 = clear oneshot and send esc.
     ACTION_MODS_TAP_KEY(MOD_LGUI, KC_ESC),          // FN14 = LGui   with tap Escape
     ACTION_MODS_TAP_KEY(MOD_RSFT, KC_QUOT),         // FN15 = RShift with tap quotes
     ACTION_MODS_TAP_KEY(MOD_RCTL, KC_RBRC),         // FN16 = RCtrl  with tap ]

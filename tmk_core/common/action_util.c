@@ -134,6 +134,28 @@ void clear_oneshot_mods(void)
     oneshot_time = 0;
 #endif
 }
+uint8_t get_oneshot_mods()
+{
+  return oneshot_mods;
+}
+
+/* from common/report.h
+ * mods retains state of 8 modifiers.
+ *
+ *  bit |0       |1       |2       |3       |4       |5       |6       |7
+ * -----+--------+--------+--------+--------+--------+--------+--------+--------
+ * desc |Lcontrol|Lshift  |Lalt    |Lgui    |Rcontrol|Rshift  |Ralt    |Rgui
+ *
+ */
+void add_oneshot_mods(uint8_t mods)
+{
+  xprintf("Adding mod %d to current mods %d\n", mods, oneshot_mods);
+  oneshot_mods |= mods;
+  xprintf("Result is %d\n",oneshot_mods);
+#if (defined(ONESHOT_TIMEOUT) && (ONESHOT_TIMEOUT > 0))
+    oneshot_time = timer_read();
+#endif
+}
 #endif
 
 
