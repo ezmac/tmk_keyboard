@@ -308,11 +308,18 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             bootloader_jump(); // should not return
             print("not supported.\n");
             break;
+
+        //case TAPSHOT_HOLD_TOGGLE_LAYER:  
+            // TODO:
+            // - Write some code to do tap one shot hold momentary toggle on layers.
+            // - convert ONE_SHOT_MOD to use ACTION_MODS_ONESHOT if possible.  Might save space
+            // - remove unused debug statements.
+            break;
         case ESCAPE_WRAPPER:
             {
                 if (event.pressed) {
                     uint8_t osm = has_any_oneshot_mods();
-                    xprintf("escape_wrapper called\n Oneshot mods are: %d\n", osm);
+                    xprintf("escape_wrapper called\n Oneshot mods are: %d\n", get_oneshot_mods());
                     if (osm !=0)
                     {
                       xprintf("clearing oneshot mods\n");
@@ -322,9 +329,13 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
                     else
                     {
                       xprintf("exec escape\n");
-                      register_code(KC_ESC);
+                      add_key(KC_ESC);
+                      send_keyboard_report();
                     }
                 } else {
+                      del_key(KC_ESC);
+                      send_keyboard_report();
+
                   // key was released
                 }
 

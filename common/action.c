@@ -38,7 +38,7 @@ void action_exec(keyevent_t event)
 {
     if (!IS_NOEVENT(event)) {
         dprint("\n---- action_exec: start -----\n");
-        dprint("EVENT: "); debug_event(event); dprintln();
+     
     }
 
     keyrecord_t record = { .event = event };
