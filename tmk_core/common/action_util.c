@@ -134,7 +134,7 @@ void clear_oneshot_mods(void)
     oneshot_time = 0;
 #endif
 }
-uint8_t get_oneshot_mods()
+int8_t get_oneshot_mods()
 {
   return oneshot_mods;
 }
