@@ -102,20 +102,20 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         GRV, 1,   2,   3,   4,   5,   F5,
         TAB, Q,   W,   E,   R,   T,   GRV,
         FN13, A,   S,   D,   F,   G,
-        FN10,Z,   X,   C,   V,   B,   LSFT,
+        LSFT,Z,   X,   C,   V,   B,   LSFT,
         FN3,FN4,FN2,LALT,LCTRL,
-                                      LGUI,FN10,
-                                           FN10,
-                              BSPACE, FN1, FN10,
+                                      FN14,LALT,
+                                           LGUI,
+                              BSPACE, FN1, LCTL,
         // right hand
-             F6, 6,   7,   8,   9,   0,   MINS,
+             F6,   6,   7,   8,   9,   0,   MINS,
              MINS ,Y,   U,   I,   O,   P,   BSLS,
-                  H,   J,   K,   L,   SCLN,QUOT,
-             RSFT, N,   M,   COMM,DOT, SLSH,FN10,
+                   H,   J,   K,   L,   SCLN,QUOT,
+             RSFT, N,   M,   COMM,DOT, SLSH,RSFT,
                        RCTRL,RALT,FN13,  FN4,F12,
-        FN10,RGUI,
-        FN10,
-        FN10, FN1, SPACE
+        RALT,FN14,
+        RGUI,
+        RCTL, FN1, SPACE
     ),
 
     KEYMAP(  // Layer1: blueshift
@@ -125,18 +125,18 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS, FN5, FN6, NO, NO, NO,
         TRNS,NO, NO, NO, NO, NO, TRNS,
         TRNS,TRNS,TRNS,TRNS,TRNS,
-                                      TRNS,TRNS,
-                                           NO,
-                                 ESC,TRNS,TRNS,
+                                      LGUI,FN10,
+                                           FN10,
+                              ESC, FN1, FN10,
         // right hand
              F7, F8, F9, F10, F11, F12, MINUS,
              TRNS, TRNS,LBRC, RBRC, FN7 , FN8, EQUAL,
                 LEFT,   DOWN,   UP,   RIGHT, NO  ,   TRNS,
              TRNS,APP, INS,   HOME,PGUP,TRNS,TRNS,
                        DEL,END,PGDN,SLASH,TRNS,
-        TRNS,TRNS,
-        NO,
-        TRNS,TRNS,ENTER
+        FN10,FN14,
+        FN10,
+        FN10, FN1, ENTER
     ),
 
     KEYMAP(  // Layer2: numpad, leftled:blue
@@ -411,7 +411,7 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_MACRO(FAT_ARROW),                        // FN11 = Fat arrow =>
     ACTION_MACRO(THIN_ARROW),                       // FN12 = Thin arrow ->
     ACTION_FUNCTION(ESCAPE_WRAPPER),                // FN13 = clear oneshot and send esc.
-    ACTION_MODS_TAP_KEY(MOD_LGUI, KC_ESC),          // FN14 = LGui   with tap Escape
+    ACTION_MODS(MOD_LALT | MOD_LCTL),               // FN14 = ctl alt
     ACTION_MODS_TAP_KEY(MOD_RSFT, KC_QUOT),         // FN15 = RShift with tap quotes
     ACTION_MODS_TAP_KEY(MOD_RCTL, KC_RBRC),         // FN16 = RCtrl  with tap ]
 
