@@ -292,6 +292,37 @@ void handle_one_shot_mod_action(keyrecord_t *record)
     xprintf("Was not a mod key");
   }
 } 
+
+void action_shift_key(keyrecord_t *record)
+{
+  keyevent_t event = record->event;
+  tap_t tap = record->tap;
+  key_t key = event.key;
+  uint8_t pressed_keycode = keymap_key_to_keycode(ONESHOTMOD_REFERENCE_LAYER, key);
+  uint8_t mod_key = MOD_BIT(KC_LSFT);
+
+  //var_dump_keyrecord(record);
+  //xprintf("pressed_keycode is: %d. mod_key is %d\n, amk= %d\n",pressed_keycode, mod_key, ACTION_MODS_KEY(MOD_LSFT, mod_key));
+  //print("mod_bit ");phex(MOD_BIT(KC_LSFT)); print("\n"); 
+  //print("pressed_keycode ");phex(pressed_keycode); print("\n"); 
+  //print("key ");phex(key); print("\n"); 
+  //print("mod_bit<<8 ");phex(MOD_BIT(KC_LSFT)<<8); print("\n"); 
+  //print("mod_bit<<8|pressed_keycode ");phex(MOD_BIT(KC_LSFT)<<8|pressed_keycode); print("\n"); 
+  //print("ACTION_MODS_KEY ");phex( ACTION_MODS_KEY(MOD_BIT(KC_LSFT), pressed_keycode)); print("\n"); 
+
+  // for some reason, the released key sent to the os is the lower case version
+  // also, if key is held, the OS does not receive it until another key is pressed.  This affects shift clicking.
+  if (event.pressed) {
+    //print("event.pressed\n");
+    register_code(KC_LSFT);
+    register_code(pressed_keycode);
+  } else {
+    //print("event.pressed broke\n");
+    unregister_code(pressed_keycode);
+    unregister_code(KC_LSFT);
+  }
+}
+
 void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
     keyevent_t event = record->event;
@@ -346,10 +377,11 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             //this is basically how ACTION_MODS_TAP_KEY works.
             handle_one_shot_mod_action(record);
             break;
+        case SHIFT_KEY:
+            action_shift_key(record);
+            break;
     }
 }
-
-
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
     keyevent_t event = record->event;
@@ -358,11 +390,11 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
     switch (id) {
         case FAT_ARROW:
             return (event.pressed ?
-                    MACRO( T(EQUAL), D(LSHIFT), T(DOT), U(LSHIFT), END ) : MACRO_NONE);
+                    MACRO( T(SPACE), T(EQUAL), D(LSHIFT), T(DOT), U(LSHIFT), T(SPACE), END ) : MACRO_NONE);
             break;
         case THIN_ARROW:
                 return (event.pressed ?
-                        MACRO( T(MINS), D(LSHIFT), T(DOT), U(LSHIFT), END ) : MACRO_NONE);
+                        MACRO( T(SPACE), T(MINS), D(LSHIFT), T(DOT), U(LSHIFT),T(SPACE), END ) : MACRO_NONE);
             break;
         case LSHIFT_LBRACE:
             if (tap.count > 0 && !tap.interrupted) {
