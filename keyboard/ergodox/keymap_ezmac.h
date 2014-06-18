@@ -15,26 +15,29 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * Keymap: Default Layer in QWERTY
      *
      * ,--------------------------------------------------.           ,--------------------------------------------------.
-     * |        |   1  |   2  |   3  |   4  |   5  |  F5  |           |  F6  |   6  |   7  |   8  |   9  |   0  |        |
+     * |        |   1  |   2  |   3  |   4  |   5  |  F5  |           |  F6  |   6  |   7  |   8  |   9  |   0  |   -    |
      * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
      * |        |   Q  |   W  |   E  |   R  |   T  |  `   |           | ESC  |   Y  |   U  |   I  |   O  |   P  |        |
      * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
-     * |        |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |GUI+CTL |
+     * |        |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |    "   |
      * |--------+------+------+------+------+------|MOUSE |           | TAB  |------+------+------+------+------+--------|
-     * | LCtrl  |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  | RCtrl  |
+     * | shift  |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  | shift  |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-     *   | ~L1  | ~L3  | +L3  | LAlt | LGui |                                       |  Lft |  Up  |  Dn  | Rght | ~L6  |
+     *   | ~L1  | ~L9  | +L3  | LAlt | LGui |                                       |  Lft |  Up  |  Dn  | Rght | ~L6  |
      *   `----------------------------------'                                       `----------------------------------'
      *                                        ,-------------.       ,-------------.
      *                                        |SFTCTL| LALT |       | RALT |SFTCTL|
      *                                 ,------|------|------|       |------+------+------.
      *                                 |      |      | LMETA|       | RMETA|      |      |
      *                                 | BkSp |  ~L1 |------|       |------|  ~L1 | Space|
-     *                                 |      |      | LSFT |       | RSFT |      |      |
+     *                                 | Shift| ESC  | LCTL |       | RCTL | TAB  | Shift|
      *                                 `--------------------'       `--------------------'
      *
      ****************************************************************************************************
      *
+     * FN4 is ~9 and with the key left of 1, its the teensy key combo
+     * todo: replace lmeta and rmeta with layers.  Since I always use it for gui commands, it would make sense to do tap key hold action with a layer toggle making the cluster different.
+     *       this also makes sense with bksp and space..actually, using space/bksp as shift makes a lot of sense..
      */
 
 /*
@@ -48,6 +51,26 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #define KC_COMBO(keys) keys
 
+    KEYMAP(  // Layer0: default
+        // left hand
+          GRV,   1,   2,   3,   4,   5,   F5,
+          TAB,   Q,   W,   E,   R,   T,   GRV,
+          ESC,   A,   S,   D,   F,   G,
+        LSFT,   Z,   X,   C,   V,   B,   FN2,
+         FN3, FN4, FN3,LALT,LCTL,
+                                      FN15,LALT,
+                                           LGUI,
+                              BSPACE, FN16, LCTL,
+        // right hand
+         F6,   6,   7,   8,   9,   0,  MINS,
+        FN13,   Y,   U,   I,   O,   P,   BSLS,
+               H,   J,   K,   L,   SCLN,QUOT,
+         TAB,  N,   M,   COMM,DOT, SLSH,RSFT,
+                 RCTRL,RALT, FN13,  FN4, F12,
+        RALT,FN15,
+        RGUI,
+        RCTL, FN17, SPACE
+    ),
 
 
      /*
@@ -56,22 +79,20 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *
      ****************************************************************************************************
      *
-     * ,--------------------------------------------------.           ,--------------------------------------------------.
-     * |        |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  |        |
-     * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
-     * |        |   !  |   @  |   #  |   $  |   %  |   ~  |           |      |   ^  |   &  |   *  |   (  |   )  |        |
+     * ,--------------------------------------------------.           ,--------------------------------------------------. * |  App   |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  | PgUp   | * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+     * |  Home  |   !  |   @  |   #  |   $  |   %  |  =>  |           |      |   ^  |   &  |   *  |   (  |   )  | PgDn   |
      * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
-     * |        |   [  |   ]  |   +  |  =>  |  ->  |------|           |------| left | down |  up  |right |   |  |        |
-     * |--------+------+------+------+------+------| Home |           |  :   |------+------+------+------+------+--------|
-     * |LCtl+Sft|   {  |   }  |   -  |   \  |   "  |      |           |      |   '  |   /  |   <  |   >  |   ?  |        |
+     * |  End   |   [  |   ]  |   +  |   '  |   "  |------|           |------| left | down |  up  |right |   |  |        |
+     * |--------+------+------+------+------+------|  ->  |           |      |------+------+------+------+------+--------j
+     * |LCtl+Sft|   {  |   }  |   -  |   \  |   =  |      |           |      |  !   |   :  |   <  |   >  |   _  |LCtl+Sft|
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-     *   |      |      |      |      |      |                                       |      |      |      |      |      |
+     *   | Vol+ | Vol- |Next  |      |      |                                       | Ins  | Del  |      |      |      |
      *   `----------------------------------'                                       `----------------------------------'
      *                                        ,-------------.       ,-------------.
      *                                        | TRNS | TRNS |       | TRNS | ???  |
      *                                 ,------|------|------|       |------+------+------.
      *                                 |      |      | TRNS |       | TRNS |      |      |
-     *                                 | ESC  |  ~L2 |------|       |------|  ~L2 | Enter|
+     *                                 | ESC  | TAB  |------|       |------|  TAB | Enter|
      *                                 |      |      | RCTL |       | RCTL |      |      |
      *                                 `--------------------'       `--------------------'
      *
@@ -79,31 +100,31 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     KEYMAP(  // Layer1: blueshift
         // left hand
-        NO,  F1,  F2,  F3,  F4,  F5,  F6, 
-        TRNS,FN14,FN14,FN14,FN14,FN14,TRNS,
-        TRNS,LBRC,RBRC,FN14,FN11,FN12,
-        FN15,FN14,FN14,MINS,BSLS,FN14,TRNS,
-        LCTL,TRNS,TRNS,TRNS,TRNS,
-                                      LGUI,FN10,
-                                           FN10,
-                              ESC, FN1, FN10,
+        APP,  F1,  F2,  F3,  F4,  F5,  F6, 
+        TAB,FN14,FN14,FN14,FN14,FN14,FN11,
+         ESC,LBRC,RBRC,FN14,QUOT,FN14,
+        LSFT,FN14,FN14,MINS,BSLS, EQL,FN12,
+        VOLU,VOLD,MNXT,TRNS,TRNS,
+                                        TRNS,TRNS,
+                                           TRNS,
+                              ESC, FN1,  LCTL,
         // right hand
-        F7, F8, F9, F10, F11, F12, MINUS,
-        TRNS,FN14,FN14,FN14,FN14,FN14,EQUAL,
+        F7, F8, F9, F10, F11, F12, PGUP,
+          NO,FN14,FN14,FN14,FN14,FN14,PGDN,
         LEFT,DOWN,  UP,RIGHT,FN14,TRNS,
-        FN14,QUOT,SLSH,COMM, DOT,FN14,  NO,
-                   NO,  NO,  NO,  NO,  NO,
-        FN10,FN14,
-        FN10,
-        FN10, FN1, ENTER
+          NO,FN14,INS,HOME,PGUP,FN14,FN15,
+                  DEL, END,PGDN,  NO,  NO,
+        TRNS,FN14,
+        TRNS,
+        TRNS, FN1, ENTER
     ),
 
-    KEYMAP(  // Layer2: Part of tapshot modifier hack.
-        // layer2 modifiers are sourced by the handle_one_shot_mod_action function
+    KEYMAP(  
         // left hand
+        // layer 2 is for blueshift FN14
         TRNS,  NO,  NO,  NO,  NO,  NO,  NO,
         TRNS,   1,   2,   3,   4,   5,TRNS,
-        TRNS,  NO,  NO, EQL,  NO,  NO,
+        TRNS,  NO,  NO, EQL,  NO,QUOT,
         LSFT,LBRC,RBRC,  NO,  NO,QUOT,TRNS,
         TRNS,TRNS,TRNS,TRNS,TRNS,
                                       TRNS,LALT,
@@ -114,7 +135,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              TRNS,NO,  NO,  NO,  NO,  NO,  NO,
              TRNS,6,7,8,9,0,PGUP,
                   NO,  NO,  NO,  NO,BSLS,  NO,
-             SCLN,  NO,  NO,  NO,   NO,   NO,   NO,
+               NO,   1, SCLN,COMM, DOT,MINS,  NO,
                          NO,  NO,  NO,  NO,  NO,
         RALT,TRNS,
         RGUI,
@@ -141,17 +162,16 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,
         TRNS,RSFT,RCTL
     ),
-
-    KEYMAP(  // Layer4: unconvenient keys on right hand, leftled:red
+    KEYMAP(  // Layer4: norman
         // left hand
-        FN0,NO,  NO,  NO,  NO,  NO,  NO,
-        TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
-        TRNS,TRNS,NO,  NO,  NO,  NO,
-        TRNS,TRNS,NO,  NO,  NO,  NO,  TRNS,
-        TRNS,TRNS,TRNS,LALT,LGUI,
-                                      TRNS,TRNS,
-                                           TRNS,
-                                 TRNS,TRNS,TRNS,
+        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
+        TRNS,TRNS,TRNS,   D,   F,   K,TRNS,
+        TRNS,TRNS,TRNS,   E,   T,   G,
+        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
+        TRNS,TRNS, FN3,TRNS,TRNS,
+                                      FN15,LALT,
+                                           LGUI,
+                              FN10, FN16, LCTL,
 
         // in Workman right hand will be:
         //              +
@@ -161,19 +181,22 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //
 
         // right hand
-             NO,  NO,  NO,  NO,  NO,  NO,  FN0,
-             TRNS,MINS,4,   5,   9,   0,   EQL,
-                  BSLS,2,   P,   FN1, 1,   FN2,
-             TRNS,3,   6,   FN3, FN4, 7,   FN2,
+             TRNS,   J,   U,   R,   L,TRNS,TRNS,
+             TRNS,TRNS,TRNS,TRNS,TRNS,SCLN,TRNS,
+                     Y,   N,   I,   O,   H,TRNS,
+             TRNS,   P,   M,TRNS,TRNS,TRNS,TRNS,
                        TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,
-        TRNS,
-        TRNS,TRNS,TRNS
+        RALT,FN15,
+        RGUI,
+        RCTL, FN17, FN9
     ),
+        // right hand
+
+
 
     KEYMAP(  // Layer5: F-keys instead of numbers, leftled:red
         // left hand
-        TRNS,F1,  F2,  F3,  F4,  F5,  F6,
+        FN0,F1,  F2,  F3,  F4,  F5,  F6,
         TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
         TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
         TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
@@ -261,7 +284,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     KEYMAP(  // Layer9: numpad, leftled:blue
         // left hand
-        TRNS,NO,  NO,  NO,  NO,  PAUS,PSCR,
+         FN0,NO,  NO,  NO,  NO,  PAUS,PSCR,
         TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
         TRNS,NO,  NO,  NO,  TRNS,NO,
         TRNS,NO,  NO,  NO,  TRNS,NO,  TRNS,
@@ -352,10 +375,10 @@ enum macro_id {
 static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
-    ACTION_LAYER_MOMENTARY(1),                      // FN1 - Momentary toggle layer one
-    ACTION_LAYER_TOGGLE(4),                         // FN2 - Push layer 2
-    ACTION_LAYER_MOMENTARY(4),                      // FN3 - Momentary toggle layer three unused?
-    ACTION_LAYER_MOMENTARY(4),                      // FN4 - Toggle layer four 
+    ACTION_LAYER_MOMENTARY(1),                      // FN1 - Momentary toggle layer one for blueshift
+    ACTION_LAYER_MOMENTARY(3),                      // FN2 - Momentary toggle layer 3 for mouse
+    ACTION_LAYER_TOGGLE(4),                         // FN3 - Momentary toggle layer 4 for norman layout
+    ACTION_LAYER_MOMENTARY(9),                      // FN4 - toggle layer 9 for teensy boot key
 
 
 
@@ -364,17 +387,17 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_MACRO_TAP(LSHIFT_LBRACE),                // FN7 - {
     ACTION_MACRO_TAP(LSHIFT_RBRACE),                // FN8 - }
 
-    ACTION_LAYER_TAP_KEY(1, KC_F),                  // FN9 = layer push for blueshift on F.
-    ACTION_FUNCTION_TAP(ONE_SHOT_MOD),              // FN10 = One shot shift.
+    ACTION_MODS_TAP_KEY(MOD_RSFT, KC_SPC),          // FN9 = space/shift key
+    ACTION_MODS_TAP_KEY(MOD_RSFT, KC_BSPC),         // FN10 = bspace/shift key
 
     ACTION_MACRO(FAT_ARROW),                        // FN11 = Fat arrow =>
     ACTION_MACRO(THIN_ARROW),                       // FN12 = Thin arrow ->
     ACTION_FUNCTION(ESCAPE_WRAPPER),                // FN13 = clear oneshot and send esc.
     ACTION_FUNCTION(SHIFT_KEY),                     // FN14 = shifted numbers
-    ACTION_MODS(MOD_RCTL| MOD_RGUI),                // FN15 = RShift with tap quotes
-    ACTION_MODS(MOD_RCTL| MOD_RGUI),         // FN16 = RCtrl  with tap ]
+    ACTION_MODS(MOD_RCTL| MOD_RGUI),                // FN15 = ctrl + gui
+    ACTION_LAYER_TAP_KEY(1, KC_ESC),                // FN16 - momentary Layer5 on Enter, to use with F* keys on top row
+    ACTION_LAYER_TAP_KEY(1, KC_TAB),                // FN17 - momentary Layer5 on Enter, to use with F* keys on top row
 
-    ACTION_LAYER_SET(0, ON_BOTH),                   // FN17 - set Layer0
     ACTION_LAYER_SET(1, ON_BOTH),                   // FN18 - set Layer1, to use Workman layout at firmware level
     ACTION_LAYER_SET(2, ON_BOTH),                   // FN19 - set Layer2, to use with Numpad keys
 
