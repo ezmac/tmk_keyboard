@@ -314,12 +314,11 @@ void action_shift_key(keyrecord_t *record)
   // also, if key is held, the OS does not receive it until another key is pressed.  This affects shift clicking.
   if (event.pressed) {
     //print("event.pressed\n");
-    register_code(KC_LSFT);
+    add_oneshot_mods(mod_key);
     register_code(pressed_keycode);
   } else {
     //print("event.pressed broke\n");
     unregister_code(pressed_keycode);
-    unregister_code(KC_LSFT);
   }
 }
 
