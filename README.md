@@ -2,8 +2,10 @@ TMK Keyboard Firmware Collection
 ================================
 This is a keyboard firmware with some useful features for Atmel AVR controller.
 
+
 Source code is available here: <http://github.com/tmk/tmk_keyboard>
 
+Documentation is probably not 100% correct.
 
 Features
 --------
