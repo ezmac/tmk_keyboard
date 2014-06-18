@@ -1,9 +1,9 @@
 TMK Keyboard Firmware Collection
-================================
 This repository includes keyboard and converter firmware projects built with [`tmk_core`][tmk_core] keyboard library.
 
 The latest source code is available here: <http://github.com/tmk/tmk_keyboard>
 
+Documentation is probably not 100% correct.
 
 Updates
 -------
