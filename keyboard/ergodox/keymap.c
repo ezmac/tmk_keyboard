@@ -298,7 +298,7 @@ void action_shift_key(keyrecord_t *record)
   keyevent_t event = record->event;
   tap_t tap = record->tap;
   key_t key = event.key;
-  uint8_t pressed_keycode = keymap_key_to_keycode(ONESHOTMOD_REFERENCE_LAYER, key);
+  uint8_t pressed_keycode = keymap_key_to_keycode(SHIFT_KEY_REFERENCE_LAYER, key);
   uint8_t mod_key = MOD_BIT(KC_LSFT);
 
   //var_dump_keyrecord(record);
