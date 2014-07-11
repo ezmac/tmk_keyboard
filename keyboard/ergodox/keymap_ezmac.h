@@ -9,6 +9,7 @@
 #include "debug.h"
 #include "keymap.h"
 #define ONESHOTMOD_REFERENCE_LAYER 2
+#define SHIFT_KEY_REFERENCE_LAYER 2
 #define ONESHOT_TIMEOUT 0
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
