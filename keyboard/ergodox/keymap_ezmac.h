@@ -11,6 +11,10 @@
 #define ONESHOTMOD_REFERENCE_LAYER 2
 #define ONESHOT_TIMEOUT 0
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  //my frequent workflow is vim on right, chrome left.  ctrl+win+j or k to switch.  
+  //  keys used often: ctrl, win, shift, esc, space, enter, hjkl, d, u, c, x, i [] '"-_ ()
+  //  shift should be on the thumbs or be one shottable.
+  //  programmer frequent symbols should be easy
     /*
      * Keymap: Default Layer in QWERTY
      *
@@ -194,21 +198,21 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 
-    KEYMAP(  // Layer5: F-keys instead of numbers, leftled:red
+    KEYMAP(  // Layer5: dvorak layer
         // left hand
-        FN0,F1,  F2,  F3,  F4,  F5,  F6,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
+        GRV,FN14,FN14,FN14,FN14,FN14,  F5,
+        TRNS,SCLN,COMM,DOT ,   P,   Y,TRNS,
+        TRNS,   A,   O,   E,   U,   I,
+        TRNS,QUOT,   Q,   J,   K,   X,TRNS,
         TRNS,TRNS,TRNS,TRNS,TRNS,
                                       TRNS,TRNS,
                                            TRNS,
                                  TRNS,TRNS,TRNS,
         // right hand
-             F7,  F8,  F9,  F10, F11, F12, TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                  TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
+               F6,FN14,FN14,FN14,FN14,FN14,TRNS,
+             TRNS,   F,   G,   R,   L,SLSH,TRNS,
+                     D,   H,   T,   N,   S,MINS,
+             TRNS,   B,   M,   W,   V,   Z,TRNS,
                        TRNS,TRNS,TRNS,TRNS,TRNS,
         TRNS,TRNS,
         TRNS,
