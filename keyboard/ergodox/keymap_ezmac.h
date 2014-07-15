@@ -8,6 +8,7 @@
 #include "host.h"
 #include "debug.h"
 #include "keymap.h"
+#define SHIFT_KEY_REFERENCE_LAYER 11
 #define ONESHOTMOD_REFERENCE_LAYER 2
 #define ONESHOT_TIMEOUT 0
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -15,26 +16,29 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //  keys used often: ctrl, win, shift, esc, space, enter, hjkl, d, u, c, x, i [] '"-_ ()
   //  shift should be on the thumbs or be one shottable.
   //  programmer frequent symbols should be easy
+
+
+  //thumb rework is an attempt to reduce my reliance on thumb based chording.
     /*
      * Keymap: Default Layer in QWERTY
      *
      * ,--------------------------------------------------.           ,--------------------------------------------------.
-     * |        |   1  |   2  |   3  |   4  |   5  |  F5  |           |  F6  |   6  |   7  |   8  |   9  |   0  |   -    |
+     * |  GRV   |   1  |   2  |   3  |   4  |   5  |  F5  |           |  F6  |   6  |   7  |   8  |   9  |   0  |   -    |
      * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
-     * |        |   Q  |   W  |   E  |   R  |   T  |  `   |           | ESC  |   Y  |   U  |   I  |   O  |   P  |        |
+     * |  TAB   |   Q  |   W  |   E  |   R  |   T  |  `   |           | ESC  |   Y  |   U  |   I  |   O  |   P  |   \    |
      * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
-     * |        |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |    "   |
-     * |--------+------+------+------+------+------|MOUSE |           | TAB  |------+------+------+------+------+--------|
+     * |  ESC   |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |    "   |
+     * |--------+------+------+------+------+------|SHIFT |           |SHIFT |------+------+------+------+------+--------|
      * | shift  |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  | shift  |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-     *   | ~L1  | ~L9  | +L3  | LAlt | LGui |                                       |  Lft |  Up  |  Dn  | Rght | ~L6  |
+     *   | ~L3  | ~L9  | LALT | LGUI | LCTL |                                       | RCTL | RGUI | RALT | FN4  | F12  |
      *   `----------------------------------'                                       `----------------------------------'
      *                                        ,-------------.       ,-------------.
-     *                                        |SFTCTL| LALT |       | RALT |SFTCTL|
+     *                                        | MOUSE|GUIWIN|       |      |      |
      *                                 ,------|------|------|       |------+------+------.
-     *                                 |      |      | LMETA|       | RMETA|      |      |
+     *                                 |      |      |TMXWIN|       |      |      |      |
      *                                 | BkSp |  ~L1 |------|       |------|  ~L1 | Space|
-     *                                 | Shift| ESC  | LCTL |       | RCTL | TAB  | Shift|
+     *                                 |      | ESC  |GUISCN|       |      | TAB  |      |
      *                                 `--------------------'       `--------------------'
      *
      ****************************************************************************************************
@@ -57,20 +61,22 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     KEYMAP(  // Layer0: default
         // left hand
+         // GRV,FN14,FN14,FN14,FN14,FN14,   F5, //use shifted numbers
           GRV,   1,   2,   3,   4,   5,   F5,
           TAB,   Q,   W,   E,   R,   T,   GRV,
           ESC,   A,   S,   D,   F,   G,
         LSFT,   Z,   X,   C,   V,   B,   FN2,
-         FN3, FN4, FN3,LALT,LCTL,
+         FN3, FN4, FN3,LALT,LSFT,
                                       FN15,LALT,
                                            LGUI,
-                              BSPACE, FN16, LCTL,
+                              BSPC, FN16, LCTL,
         // right hand
+         //F6,FN14,FN14,FN14,FN14,FN14,  MINS, use shifted numbers
          F6,   6,   7,   8,   9,   0,  MINS,
         FN13,   Y,   U,   I,   O,   P,   BSLS,
                H,   J,   K,   L,   SCLN,QUOT,
          TAB,  N,   M,   COMM,DOT, SLSH,RSFT,
-                 RCTRL,RALT, FN13,  FN4, F12,
+                 RSFT,RALT, FN13,  FN4, F12,
         RALT,FN15,
         RGUI,
         RCTL, FN17, SPACE
@@ -78,19 +84,23 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
      /*
+      * this is left for ease, but blueshift layer is now layer 10 and blueshift's FN14 layer is 11.  This is because higher
+      * levels have priority and having blueshift at 10 allows the colmak layer (4) to still use the same blueshift.
      * This layout is based off "Blueshift".  There should be a link, but a google for ergodox and blueshift should get it.
      * I may have missed a few keys or changed them and not updated the docs
      *
      ****************************************************************************************************
      *
-     * ,--------------------------------------------------.           ,--------------------------------------------------. * |  App   |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  | PgUp   | * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
-     * |  Home  |   !  |   @  |   #  |   $  |   %  |  =>  |           |      |   ^  |   &  |   *  |   (  |   )  | PgDn   |
+     * ,--------------------------------------------------.           ,--------------------------------------------------. *
+     * |  App   |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  | PgUp   | *
+     * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+     * |  TAB   |      |   {  |   }  |   $  |   %  |  =>  |           |      |      |      |      |      |      | PgDn   |
      * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
-     * |  End   |   [  |   ]  |   +  |   '  |   "  |------|           |------| left | down |  up  |right |   |  |        |
+     * |  End   |   _  |   (  |   )  |   +  |   "  |------|           |------| left | down |  up  |right |   $  |   =    |
      * |--------+------+------+------+------+------|  ->  |           |      |------+------+------+------+------+--------j
-     * |LCtl+Sft|   {  |   }  |   -  |   \  |   =  |      |           |      |  !   |   :  |   <  |   >  |   _  |LCtl+Sft|
+     * | shift  |  -   |   [  |   ]  |      |      |      |           |      |  !   | INS  | HOME | PGUP |      |  shift |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-     *   | Vol+ | Vol- |Next  |      |      |                                       | Ins  | Del  |      |      |      |
+     *   | Vol+ | Vol- |Next  |      |      |                                       | DEL  |  END | PGDN |      |      |
      *   `----------------------------------'                                       `----------------------------------'
      *                                        ,-------------.       ,-------------.
      *                                        | TRNS | TRNS |       | TRNS | ???  |
@@ -105,45 +115,73 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KEYMAP(  // Layer1: blueshift
         // left hand
         APP,  F1,  F2,  F3,  F4,  F5,  F6, 
-        TAB,FN14,FN14,FN14,FN14,FN14,FN11,
-         ESC,LBRC,RBRC,FN14,QUOT,FN14,
-        LSFT,FN14,FN14,MINS,BSLS, EQL,FN12,
+        TAB,TRNS,FN14,FN14,FN14,FN14,FN11,
+         ESC,FN14,FN14,FN14,FN14,FN14,
+        TRNS,MINS,FN14,MINS,BSLS, EQL,FN12,
         VOLU,VOLD,MNXT,TRNS,TRNS,
                                         TRNS,TRNS,
                                            TRNS,
                               ESC, FN1,  LCTL,
         // right hand
-        F7, F8, F9, F10, F11, F12, PGUP,
-          NO,FN14,FN14,FN14,FN14,FN14,PGDN,
-        LEFT,DOWN,  UP,RIGHT,FN14,TRNS,
-          NO,FN14,INS,HOME,PGUP,FN14,FN15,
-                  DEL, END,PGDN,  NO,  NO,
+          F7,  F8,  F9, F10, F11, F12,PGUP,
+          NO,TRNS,FN14,MINS,TRNS,TRNS,PGDN,
+        LEFT,DOWN,  UP,RIGHT,FN14, EQL,
+          NO,FN14,INS,HOME,PGUP,TRNS,TRNS,
+                  DEL, END,PGDN,TRNS,TRNS,
         TRNS,FN14,
         TRNS,
         TRNS, FN1, ENTER
     ),
 
+    /*
+     *
+     *
+     * this is a dupe of layer 1's blueshift layout.  Layer 2 is used for fn14's shifted keys.
+     * if layer 1's key is FN14, it will shift the key from this layer (layer 2).
+     * This firmware can have 32 keyboard layers, and 32 functions, but functions are more useful to me.
+     * using a layer for reference allows me to use only one function and access any shifted key.  
+     * That's worth the tradeoff to me.
+     * ,--------------------------------------------------.           ,--------------------------------------------------. *
+     * |  App   |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  | PgUp   | *
+     * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+     * |  TAB   |      |   {  |   }  |   $  |   %  |  =>  |           |      |      |      |      |      |      | PgDn   |
+     * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+     * |  End   |   _  |   (  |   )  |   +  |   "  |------|           |------| left | down |  up  |right |   $  |   =    |
+     * |--------+------+------+------+------+------|  ->  |           |      |------+------+------+------+------+--------j
+     * | shift  |  -   |   [  |   ]  |      |      |      |           |      |  !   | INS  | HOME | PGUP |      |  shift |
+     * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+     *   | Vol+ | Vol- |Next  |      |      |                                       | DEL  |  END | PGDN |      |      |
+     *   `----------------------------------'                                       `----------------------------------'
+     *                                        ,-------------.       ,-------------.
+     *                                        | TRNS | TRNS |       | TRNS | ???  |
+     *                                 ,------|------|------|       |------+------+------.
+     *                                 |      |      | TRNS |       | TRNS |      |      |
+     *                                 | ESC  | TAB  |------|       |------|  TAB | Enter|
+     *                                 |      |      | RCTL |       | RCTL |      |      |
+     *                                 `--------------------'       `--------------------'
+     *
+     ****************************************************************************************************/
     KEYMAP(  
         // left hand
         // layer 2 is for blueshift FN14
         TRNS,  NO,  NO,  NO,  NO,  NO,  NO,
-        TRNS,   1,   2,   3,   4,   5,TRNS,
-        TRNS,  NO,  NO, EQL,  NO,QUOT,
-        LSFT,LBRC,RBRC,  NO,  NO,QUOT,TRNS,
+        TRNS,TRNS,LBRC,RBRC,   4,   5,TRNS,
+        TRNS,  NO,   9,   0, EQL,QUOT,
+        LSFT,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
         TRNS,TRNS,TRNS,TRNS,TRNS,
-                                      TRNS,LALT,
-                                           LGUI,
-                                  TRNS,FN1,LCTL,
+                                      TRNS,TRNS,
+                                           TRNS,
+                                 TRNS,TRNS,TRNS,
 
         // right hand
-             TRNS,NO,  NO,  NO,  NO,  NO,  NO,
-             TRNS,6,7,8,9,0,PGUP,
-                  NO,  NO,  NO,  NO,BSLS,  NO,
-               NO,   1, SCLN,COMM, DOT,MINS,  NO,
+             TRNS,  NO,  NO,  NO,  NO,  NO,  NO,
+             TRNS,   6,   7,   8,   9,   0,PGUP,
+                    NO,  NO,  NO,  NO,BSLS,  NO,
+               NO,   1,SCLN,COMM, DOT,MINS,  NO,
                          NO,  NO,  NO,  NO,  NO,
-        RALT,TRNS,
-        RGUI,
-        RCTL,FN1,TRNS
+        TRNS,TRNS,
+        TRNS,
+        TRNS,TRNS,TRNS
     ),
 
     KEYMAP(  // Layer3: experimental mouse key layer
@@ -166,33 +204,53 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,
         TRNS,RSFT,RCTL
     ),
+    /*
+     *
+     *
+     * this is the colemak layout
+     *
+     *
+     * ,--------------------------------------------------.           ,--------------------------------------------------.
+     * |  GRV   |   1  |   2  |   3  |   4  |   5  |  F5  |           |  F6  |   6  |   7  |   8  |   9  |   0  |   -    |
+     * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+     * |  TAB   |   Q  |   W  |   F  |   P  |   G  |  `   |           | ESC  |   J  |   L  |   U  |   Y  |   ;  |   \    |
+     * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+     * |  ESC   |   A  |   R  |   S  |   T  |   D  |------|           |------|   H  |   N  |   E  |   I  |   O  |    "   |
+     * |--------+------+------+------+------+------|MOUSE |           | TAB  |------+------+------+------+------+--------|
+     * | shift  |   Z  |   X  |   C  |   V  |   B  |      |           |      |   K  |   M  |   ,  |   .  |   /  | shift  |
+     * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+     *   | ~L1  | ~L9  | +L3  | LAlt | LGui |                                       | RCTL | RALT | FN13 | FN4  | F12  |
+     *   `----------------------------------'                                       `----------------------------------'
+     *                                        ,-------------.       ,-------------.
+     *                                        |SFTCTL| LALT |       | RALT |SFTCTL|
+     *                                 ,------|------|------|       |------+------+------.
+     *                                 |      |      | LMETA|       | RMETA|      |      |
+     *                                 | BkSp |  ~L1 |------|       |------|  ~L1 | Space|
+     *                                 | Shift| ESC  | LCTL |       | RCTL | TAB  | Shift|
+     *                                 `--------------------'       `--------------------'
+     *
+     ****************************************************************************************************/
     KEYMAP(  // Layer4: norman
         // left hand
         TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,   D,   F,   K,TRNS,
-        TRNS,TRNS,TRNS,   E,   T,   G,
+        TRNS,TRNS,TRNS,   F,   P,   G,TRNS,
+        TRNS,TRNS,   R,   S,   T,   D,
         TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS, FN3,TRNS,TRNS,
-                                      FN15,LALT,
-                                           LGUI,
-                              FN10, FN16, LCTL,
+         FN5,TRNS, FN3,TRNS,TRNS,
+                                      TRNS,TRNS,
+                                           TRNS,
+                                 TRNS,FN16,TRNS,
 
-        // in Workman right hand will be:
-        //              +
-        //    ^ { } ( ) =
-        //    ' ! $ " ; \
-        //    # [ < > ] \
-        //
 
         // right hand
-             TRNS,   J,   U,   R,   L,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,SCLN,TRNS,
-                     Y,   N,   I,   O,   H,TRNS,
-             TRNS,   P,   M,TRNS,TRNS,TRNS,TRNS,
+             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
+             TRNS,   J,   L,   U,   Y,SCLN,TRNS,
+                     H,   N,   E,   I,   O,TRNS,
+             TRNS,   K,TRNS,TRNS,TRNS,TRNS,TRNS,
                        TRNS,TRNS,TRNS,TRNS,TRNS,
-        RALT,FN15,
-        RGUI,
-        RCTL, FN17, FN9
+        TRNS,TRNS,
+        TRNS,
+        TRNS,FN17,TRNS
     ),
         // right hand
 
@@ -204,7 +262,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,SCLN,COMM,DOT ,   P,   Y,TRNS,
         TRNS,   A,   O,   E,   U,   I,
         TRNS,QUOT,   Q,   J,   K,   X,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,
+        FN5,TRNS,TRNS,TRNS,TRNS,
                                       TRNS,TRNS,
                                            TRNS,
                                  TRNS,TRNS,TRNS,
@@ -307,6 +365,104 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,TRNS,TRNS
     ),
 
+     /*
+     * This layout is based off "Blueshift".  There should be a link, but a google for ergodox and blueshift should get it.
+     * I may have missed a few keys or changed them and not updated the docs
+     *
+     ****************************************************************************************************
+     *
+     * ,--------------------------------------------------.           ,--------------------------------------------------. *
+     * |  App   |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  | PgUp   | *
+     * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+     * |  TAB   |      |   {  |   }  |   $  |   %  |  =>  |           |      |      |  _   |  -   |      |      | PgDn   |
+     * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+     * |  End   |   _  |   (  |   )  |   +  |   "  |------|           |------| left | down |  up  |right |   $  |   =    |
+     * |--------+------+------+------+------+------|  ->  |           |      |------+------+------+------+------+--------j
+     * | shift  |  -   |   [  |   ]  |      |      |      |           |      |  !   | INS  | HOME | PGUP |      |  shift |
+     * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+     *   | Vol+ | Vol- |Next  |      |      |                                       | DEL  |  END | PGDN |      |      |
+     *   `----------------------------------'                                       `----------------------------------'
+     *                                        ,-------------.       ,-------------.
+     *                                        | TRNS | TRNS |       | TRNS | ???  |
+     *                                 ,------|------|------|       |------+------+------.
+     *                                 |      |      | TRNS |       | TRNS |      |      |
+     *                                 | ESC  | TAB  |------|       |------|  TAB | Enter|
+     *                                 |      |      | RCTL |       | RCTL |      |      |
+     *                                 `--------------------'       `--------------------'
+     *
+     */
+
+    KEYMAP(  // Layer10: blueshift
+        // left hand
+        APP,  F1,  F2,  F3,  F4,  F5,  F6, 
+        TAB,TRNS,FN14,FN14,FN14,FN14,FN11,
+         ESC,FN14,FN14,FN14,FN14,FN14,
+        TRNS,MINS,LBRC,RBRC,TRNS,TRNS,FN12,
+        VOLU,VOLD,MNXT,TRNS,TRNS,
+                                        TRNS,TRNS,
+                                           TRNS,
+                              ESC, FN1,  LCTL,
+        // right hand
+          F7,  F8,  F9, F10, F11, F12,PGUP,
+          NO,TRNS,FN14,MINS,TRNS,TRNS,PGDN,
+        LEFT,DOWN,  UP,RIGHT,FN14, EQL,
+          NO,FN14,INS,HOME,PGUP,TRNS,TRNS,
+                  DEL, END,PGDN,TRNS,TRNS,
+        TRNS,FN14,
+        TRNS,
+        TRNS, FN1, ENTER
+    ),
+
+    /*
+     *
+     *
+     * this is a dupe of layer 10's blueshift layout.  Layer 11 is used for fn14's shifted keys.
+     * if layer 10's key is FN14, it will shift the key from this layer (layer 11).
+     * This firmware can have 32 keyboard layers, and 32 functions, but functions are more useful to me.
+     * using a layer for reference allows me to use only one function and access any shifted key.  
+     * That's worth the tradeoff to me.
+     * ,--------------------------------------------------.           ,--------------------------------------------------. *
+     * |  App   |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  | PgUp   | *
+     * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+     * |  TAB   |      |   {  |   }  |   $  |   %  |  =>  |           |      |      |  _   |  -   |      |      | PgDn   |
+     * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+     * |  End   |   _  |   (  |   )  |   +  |   "  |------|           |------| left | down |  up  |right |   $  |   =    |
+     * |--------+------+------+------+------+------|  ->  |           |      |------+------+------+------+------+--------j
+     * | shift  |  -   |   [  |   ]  |      |      |      |           |      |  !   | INS  | HOME | PGUP |      |  shift |
+     * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+     *   | Vol+ | Vol- |Next  |      |      |                                       | DEL  |  END | PGDN |      |      |
+     *   `----------------------------------'                                       `----------------------------------'
+     *                                        ,-------------.       ,-------------.
+     *                                        | TRNS | TRNS |       | TRNS | ???  |
+     *                                 ,------|------|------|       |------+------+------.
+     *                                 |      |      | TRNS |       | TRNS |      |      |
+     *                                 | ESC  | TAB  |------|       |------|  TAB | Enter|
+     *                                 |      |      | RCTL |       | RCTL |      |      |
+     *                                 `--------------------'       `--------------------'
+     *
+     ****************************************************************************************************/
+    KEYMAP(  
+        // left hand
+        // layer 11 is for blueshift FN14
+        TRNS,  1,  2,  3,  4,  5,  NO,
+        TRNS,TRNS,LBRC,RBRC,   4,   5,TRNS,
+        TRNS,MINS,   9,   0, EQL,QUOT,
+        LSFT,TRNS,LBRC,RBRC,TRNS,TRNS,TRNS,
+        TRNS,TRNS,TRNS,TRNS,TRNS,
+                                      TRNS,TRNS,
+                                           TRNS,
+                                 TRNS,TRNS,TRNS,
+
+        // right hand
+             TRNS,  6,  7,  8,  9,  0,  NO,
+             TRNS,TRNS,MINS,TRNS,TRNS,TRNS,PGUP,
+                    NO,  NO,  NO,  NO,BSLS,  NO,
+               NO,   1,SCLN,COMM, DOT,MINS,  NO,
+                         NO,  NO,  NO,  NO,  NO,
+        TRNS,TRNS,
+        TRNS,
+        TRNS,TRNS,TRNS
+    ),
 /*
     // templates to copy from
 
@@ -379,14 +535,14 @@ enum macro_id {
 static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
-    ACTION_LAYER_MOMENTARY(1),                      // FN1 - Momentary toggle layer one for blueshift
+    ACTION_LAYER_MOMENTARY(10),                      // FN1 - Momentary toggle layer one for blueshift
     ACTION_LAYER_MOMENTARY(3),                      // FN2 - Momentary toggle layer 3 for mouse
-    ACTION_LAYER_TOGGLE(4),                         // FN3 - Momentary toggle layer 4 for norman layout
+    ACTION_LAYER_TOGGLE(4),                         // FN3 - toggle layer 4 for norman layout
     ACTION_LAYER_MOMENTARY(9),                      // FN4 - toggle layer 9 for teensy boot key
 
 
 
-    ACTION_MACRO_TAP(LSHIFT_LT),                    // FN5 - <
+    ACTION_LAYER_TOGGLE(5),                         // FN5 - toggle layer 5 for norman layout
     ACTION_MACRO_TAP(LSHIFT_GT),                    // FN6 - >
     ACTION_MACRO_TAP(LSHIFT_LBRACE),                // FN7 - {
     ACTION_MACRO_TAP(LSHIFT_RBRACE),                // FN8 - }
@@ -399,8 +555,8 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(ESCAPE_WRAPPER),                // FN13 = clear oneshot and send esc.
     ACTION_FUNCTION(SHIFT_KEY),                     // FN14 = shifted numbers
     ACTION_MODS(MOD_RCTL| MOD_RGUI),                // FN15 = ctrl + gui
-    ACTION_LAYER_TAP_KEY(1, KC_ESC),                // FN16 - momentary Layer5 on Enter, to use with F* keys on top row
-    ACTION_LAYER_TAP_KEY(1, KC_TAB),                // FN17 - momentary Layer5 on Enter, to use with F* keys on top row
+    ACTION_LAYER_TAP_KEY(10, KC_ESC),               // FN16 - blueshift on hold, escape on tap.
+    ACTION_LAYER_TAP_KEY(10, KC_TAB),               // FN17 - blueshift on hold, tab on tap.
 
     ACTION_LAYER_SET(1, ON_BOTH),                   // FN18 - set Layer1, to use Workman layout at firmware level
     ACTION_LAYER_SET(2, ON_BOTH),                   // FN19 - set Layer2, to use with Numpad keys
