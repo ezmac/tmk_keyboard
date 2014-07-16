@@ -8,8 +8,16 @@
 #include "host.h"
 #include "debug.h"
 #include "keymap.h"
+#define MAIN_LAYER 0
+#define MOUSE_LAYER 3
+#define NORMAN_LAYER 4
+#define DVORAK_LAYER 5
 #define SHIFT_KEY_REFERENCE_LAYER 11
-#define ONESHOTMOD_REFERENCE_LAYER 2
+#define TMUX_MODAL_REFERENCE_LAYER 12
+#define AWESOME_MODAL_REFERENCE_LAYER 13
+#define BLUESHIFT_LAYER 10
+#define SHORTCUT_LAYER 10
+#define ONESHOTMOD_REFERENCE_LAYER 14
 #define ONESHOT_TIMEOUT 0
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //my frequent workflow is vim on right, chrome left.  ctrl+win+j or k to switch.  
@@ -62,28 +70,72 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KEYMAP(  // Layer0: default
         // left hand
          // GRV,FN14,FN14,FN14,FN14,FN14,   F5, //use shifted numbers
-          GRV,   1,   2,   3,   4,   5,   F5,
-          TAB,   Q,   W,   E,   R,   T,   GRV,
+          GRV,   1,   2,   3,   4,   5, GRV,
+          TAB,   Q,   W,   E,   R,   T,BRKT,
           ESC,   A,   S,   D,   F,   G,
-        LSFT,   Z,   X,   C,   V,   B,   FN2,
-         FN3, FN4, FN3,LALT,LSFT,
+        LSFT,   Z,   X,   C,   V,   B, FN14,
+         FN3, FN4, LALT,LGUI,LCTL,
                                       FN15,LALT,
                                            LGUI,
-                              BSPC, FN16, LCTL,
+                              BSPC, FN16, LSFT,
         // right hand
          //F6,FN14,FN14,FN14,FN14,FN14,  MINS, use shifted numbers
          F6,   6,   7,   8,   9,   0,  MINS,
         FN13,   Y,   U,   I,   O,   P,   BSLS,
                H,   J,   K,   L,   SCLN,QUOT,
          TAB,  N,   M,   COMM,DOT, SLSH,RSFT,
-                 RSFT,RALT, FN13,  FN4, F12,
+                 RCTL,RGUI,RALT,  NO, F12,
         RALT,FN15,
         RGUI,
-        RCTL, FN17, SPACE
+        RSFT, FN17, SPACE
     ),
 
 
-     /*
+    /*
+       outer keys are evil or something.  need more []{}(), number pad, and plus.  consider layer docs above to be moot.
+$test
+       This is the new base layout
+       ,--------------------------------------------------            ,--------------------------------------------------,
+       |        |      |      |      |      |      |  ~   |           |      |      |      |      |      |      |        |
+       |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+       |        |      |      |      |      |      |  [   |           |  ]   |      |      |      |      |      |        |
+       |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+       |        |      |      |      |      |      |------|           |------|      |      |      |      |      |        |
+       |--------+------+------+------+------+------|  +   |           |  =   |------+------+------+------+------+--------|
+       |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+       `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+         |      |      |      |      |  '   |                                       |  "   |      |      |      |      |
+         `----------------------------------'                                       `----------------------------------'
+                                              ,-------------,       ,-------------.
+                                              |      |      |       |      |      |
+                                       ,------|------|------|       |------+------+------,
+                                       |      |      |      |       |      |      |      |
+                                       | BKSP | ~L1  |------|       |------|      |      |
+                                       |      | ESC  | SHFT |       | SFHT |      |      |
+                                       `--------------------'       `--------------------'
+
+
+       This is the new shifted layer.  
+       ,--------------------------------------------------            ,--------------------------------------------------,
+       |        |      |      |      |      |      |  ~   |           |      |      |      |      |      |      |        |
+       |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+       |        |      |      |      |      |      |  [   |           |  ]   |      |      |      |      |      |        |
+       |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+       |        |      |      |      |      |      |------|           |------|      |      |      |      |      |        |
+       |--------+------+------+------+------+------|  +   |           |  =   |------+------+------+------+------+--------|
+       |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+       `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+         |      |      |      |      |  '   |                                       |  "   |      |      |      |      |
+         `----------------------------------'                                       `----------------------------------'
+                                              ,-------------,       ,-------------.
+                                              |      |      |       |      |      |
+                                       ,------|------|------|       |------+------+------,
+                                       |      |      |      |       |      |      |      |
+                                       |      |      |------|       |------|      |      |
+                                       |      |      |      |       |      |      |      |
+                                       `--------------------'       `--------------------'
+
+      
       * this is left for ease, but blueshift layer is now layer 10 and blueshift's FN14 layer is 11.  This is because higher
       * levels have priority and having blueshift at 10 allows the colmak layer (4) to still use the same blueshift.
      * This layout is based off "Blueshift".  There should be a link, but a google for ergodox and blueshift should get it.
@@ -207,7 +259,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
      *
      *
-     * this is the colemak layout
+     * this is the COLEMAN layout
      *
      *
      * ,--------------------------------------------------.           ,--------------------------------------------------.
@@ -447,7 +499,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,  1,  2,  3,  4,  5,  NO,
         TRNS,TRNS,LBRC,RBRC,   4,   5,TRNS,
         TRNS,MINS,   9,   0, EQL,QUOT,
-        LSFT,TRNS,LBRC,RBRC,TRNS,TRNS,TRNS,
+        LSFT,TRNS,LBRC,RBRC,TRNS,TRNS,EQLS,
         TRNS,TRNS,TRNS,TRNS,TRNS,
                                       TRNS,TRNS,
                                            TRNS,
@@ -535,8 +587,8 @@ enum macro_id {
 static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
-    ACTION_LAYER_MOMENTARY(10),                      // FN1 - Momentary toggle layer one for blueshift
-    ACTION_LAYER_MOMENTARY(3),                      // FN2 - Momentary toggle layer 3 for mouse
+    ACTION_LAYER_MOMENTARY(BLUESHIFT_LAYER),                      // FN1 - Momentary toggle layer one for blueshift
+    ACTION_LAYER_MOMENTARY(SHORTCUT_LAYER),                      // FN2 - Momentary toggle layer 3 for mouse
     ACTION_LAYER_TOGGLE(4),                         // FN3 - toggle layer 4 for norman layout
     ACTION_LAYER_MOMENTARY(9),                      // FN4 - toggle layer 9 for teensy boot key
 
@@ -553,12 +605,12 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_MACRO(FAT_ARROW),                        // FN11 = Fat arrow =>
     ACTION_MACRO(THIN_ARROW),                       // FN12 = Thin arrow ->
     ACTION_FUNCTION(ESCAPE_WRAPPER),                // FN13 = clear oneshot and send esc.
-    ACTION_FUNCTION(SHIFT_KEY),                     // FN14 = shifted numbers
-    ACTION_MODS(MOD_RCTL| MOD_RGUI),                // FN15 = ctrl + gui
+    ACTION_FUNCTION(SHIFT_KEY),                     // FN14 = SHIFT_KEY action
+    ACTION_FUNCTION(TMUX_MODAL),                     // FN15 = modal action for tmux..
     ACTION_LAYER_TAP_KEY(10, KC_ESC),               // FN16 - blueshift on hold, escape on tap.
     ACTION_LAYER_TAP_KEY(10, KC_TAB),               // FN17 - blueshift on hold, tab on tap.
 
-    ACTION_LAYER_SET(1, ON_BOTH),                   // FN18 - set Layer1, to use Workman layout at firmware level
+    ACTION_FUNCTION(AWESOME_MODAL),                     // FN18 = shifted numbers
     ACTION_LAYER_SET(2, ON_BOTH),                   // FN19 - set Layer2, to use with Numpad keys
 
     ACTION_LAYER_MOMENTARY(2),                      // FN20 - momentary Layer2, to use with Numpad keys
