@@ -74,7 +74,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KEYMAP(  // Layer0: default
         // left hand
          // GRV,FN14,FN14,FN14,FN14,FN14, GRV, //use shifted numbers
-          GRV,   1,   2,   3,   4,   5, GRV,
+          GRV,   1,   2,   3,   4,   5, F5,
           TAB,   Q,   W,   E,   R,   T,LBRC,
           ESC,   A,   S,   D,   F,   G,
          LSFT,   Z,   X,   C,   V,   B, FN14,
@@ -84,7 +84,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                               BSPC,FN16, FN7,
         // right hand
         //MINS,FN14,FN14,FN14,FN14,FN14,  MINS, //use shifted numbers
-        MINS,   6,   7,   8,   9,   0,MINS,
+        F6,   6,   7,   8,   9,   0,MINS,
         RBRC,   Y,   U,   I,   O,   P,BSLS,
                 H,   J,   K,   L,SCLN,QUOT,
          EQL,   N,   M,COMM, DOT,SLSH,RSFT,
