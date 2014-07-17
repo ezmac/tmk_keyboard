@@ -20,8 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <util/delay.h>
 #include "keycode.h"
 #include "action.h"
+#include "action_layer.h"
 #include "action_code.h"
 #include "action_macro.h"
+#include "action_util.h"
+#include "action.h"
 #include "bootloader.h"
 #include "report.h"
 #include "host.h"
@@ -299,19 +302,44 @@ void action_shift_key(keyrecord_t *record)
   tap_t tap = record->tap;
   key_t key = event.key;
   uint8_t pressed_keycode = keymap_key_to_keycode(SHIFT_KEY_REFERENCE_LAYER, key);
+  uint8_t held_mods = (pressed_keycode);
   uint8_t mod_key = MOD_BIT(KC_LSFT);
 
   //var_dump_keyrecord(record);
-  //xprintf("pressed_keycode is: %d. mod_key is %d\n, amk= %d\n",pressed_keycode, mod_key, ACTION_MODS_KEY(MOD_LSFT, mod_key));
+  //xprintf("pressed_keycode is: %d. mod_key is %d\n, amk= %d\n, held_mods=%d",pressed_keycode, mod_key, ACTION_MODS_KEY(MOD_LSFT, mod_key), held_mods);
   //print("mod_bit ");phex(MOD_BIT(KC_LSFT)); print("\n"); 
   //print("pressed_keycode ");phex(pressed_keycode); print("\n"); 
   //print("key ");phex(key); print("\n"); 
   //print("mod_bit<<8 ");phex(MOD_BIT(KC_LSFT)<<8); print("\n"); 
   //print("mod_bit<<8|pressed_keycode ");phex(MOD_BIT(KC_LSFT)<<8|pressed_keycode); print("\n"); 
   //print("ACTION_MODS_KEY ");phex( ACTION_MODS_KEY(MOD_BIT(KC_LSFT), pressed_keycode)); print("\n"); 
+  print("\n");
+  //print("test");phex(MOD_BIT(key));print("\n");
+  //print("held_mods ");phex(held_mods&0x07); print("\n"); 
 
+
+  action_t action = layer_switch_get_action(event.key);
+  uint8_t mods = action.key.mods<<4; 
+  xprintf("pressed_keycode is: %d. mod_key is %d\n",pressed_keycode, mod_key);
+
+  print("MOD_LSFT | MOD_RSFT");phex(MOD_LSFT);print(" | ");phex(MOD_RSFT);
+  print("new test ");phex(mods); print("\n"); 
+  if(IS_MOD(held_mods)) {
+    print("Was a mod!");
+  }
+  /*
+  print("0xMOD_BIT(held_mods) ");phex(MOD_BIT(held_mods)); print("\n"); 
+  print("0xMOD_BIT(KC_LSFT) ");phex(MOD_BIT(KC_LSFT)); print("\n"); 
+       print("\n"); 
+  print("0xMOD_BIT(MOD_LSFT) ");phex(MOD_BIT(MOD_LSFT)); print("\n"); 
   // for some reason, the released key sent to the os is the lower case version
   // also, if key is held, the OS does not receive it until another key is pressed.  This affects shift clicking.
+  */
+   // if the heldmods x 
+  if (!(held_mods ^ (MOD_LSFT | MOD_RSFT)) !=0){
+    print("shift was held\n"); 
+    mod_key = 0;
+  }
   if (event.pressed) {
     //print("event.pressed\n");
     add_oneshot_mods(mod_key);

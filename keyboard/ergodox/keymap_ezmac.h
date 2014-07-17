@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <stdint.h> 
 #include <stdbool.h>
 #include <avr/pgmspace.h>
 #include "keycode.h"
@@ -9,14 +9,19 @@
 #include "debug.h"
 #include "keymap.h"
 #define MAIN_LAYER 0
+#define LEFT_BLUESHIFT 1
+#define RIGHT_BLUESHIFT 2
 #define MOUSE_LAYER 3
 #define NORMAN_LAYER 4
 #define DVORAK_LAYER 5
+#define NUMPAD_LAYER 6
+#define TEENSY_LAYER 9
+#define BLUESHIFT_LAYER 10
+#define SHORTCUT_LAYER 15
+// SHIFT_KEY_REFERENCE_LAYER is the layer looked at by the shift key function.
 #define SHIFT_KEY_REFERENCE_LAYER 11
 #define TMUX_MODAL_REFERENCE_LAYER 12
 #define AWESOME_MODAL_REFERENCE_LAYER 13
-#define BLUESHIFT_LAYER 10
-#define SHORTCUT_LAYER 10
 #define ONESHOTMOD_REFERENCE_LAYER 14
 #define ONESHOT_TIMEOUT 0
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -66,35 +71,55 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 #define KC_COMBO(keys) keys
-
     KEYMAP(  // Layer0: default
         // left hand
-         // GRV,FN14,FN14,FN14,FN14,FN14,   F5, //use shifted numbers
+         // GRV,FN14,FN14,FN14,FN14,FN14, GRV, //use shifted numbers
           GRV,   1,   2,   3,   4,   5, GRV,
-          TAB,   Q,   W,   E,   R,   T,BRKT,
+          TAB,   Q,   W,   E,   R,   T,LBRC,
           ESC,   A,   S,   D,   F,   G,
-        LSFT,   Z,   X,   C,   V,   B, FN14,
-         FN3, FN4, LALT,LGUI,LCTL,
-                                      FN15,LALT,
-                                           LGUI,
-                              BSPC, FN16, LSFT,
+         LSFT,   Z,   X,   C,   V,   B, FN14,
+          FN3, FN9,LALT,LGUI,LCTL,
+                                    FN3, FN6,
+                                        LGUI,
+                              BSPC,FN16, FN7,
         // right hand
-         //F6,FN14,FN14,FN14,FN14,FN14,  MINS, use shifted numbers
-         F6,   6,   7,   8,   9,   0,  MINS,
-        FN13,   Y,   U,   I,   O,   P,   BSLS,
-               H,   J,   K,   L,   SCLN,QUOT,
-         TAB,  N,   M,   COMM,DOT, SLSH,RSFT,
-                 RCTL,RGUI,RALT,  NO, F12,
+        //MINS,FN14,FN14,FN14,FN14,FN14,  MINS, //use shifted numbers
+        MINS,   6,   7,   8,   9,   0,MINS,
+        RBRC,   Y,   U,   I,   O,   P,BSLS,
+                H,   J,   K,   L,SCLN,QUOT,
+         EQL,   N,   M,COMM, DOT,SLSH,RSFT,
+                  RCTL,RGUI,RALT,  NO, F12,
         RALT,FN15,
         RGUI,
-        RSFT, FN17, SPACE
+         FN8,FN17, SPC
     ),
 
 
     /*
        outer keys are evil or something.  need more []{}(), number pad, and plus.  consider layer docs above to be moot.
 $test
-       This is the new base layout
+       This is the new base layout needs a place for '
+       ,--------------------------------------------------            ,--------------------------------------------------,
+       |        |      |      |      |      |      |  ~   |           |  -   |      |      |      |      |      |        |
+       |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+       |        |      |      |      |      |      |  [   |           |  ]   |      |      |      |      |      |        |
+       |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+       |        |      |      |      |      |      |------|           |------|      |      |      |      |      |        |
+       |--------+------+------+------+------+------|  +   |           |  =   |------+------+------+------+------+--------|
+       |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+       `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+         |      |      | LALT | LGUI | LCTL |                                       | RCTL | RGUI | RALT |      |      |
+         `----------------------------------'                                       `----------------------------------'
+                                              ,-------------,       ,-------------.
+                                              |MOUSE |NUMPAD|       |      |      |
+                                       ,------|------|------|       |------+------+------,
+                                       |      |      | LGUI |       |RGUI  |      |      |
+                                       | BKSP | ~L1  |------|       |------| ~L2  | SPACE|
+                                       |      | ESC  |LCTL ,|       |SFHT .| TAB  |      |
+                                       `--------------------'       `--------------------'
+
+
+       This is the shifted layer L1
        ,--------------------------------------------------            ,--------------------------------------------------,
        |        |      |      |      |      |      |  ~   |           |      |      |      |      |      |      |        |
        |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
@@ -110,12 +135,10 @@ $test
                                               |      |      |       |      |      |
                                        ,------|------|------|       |------+------+------,
                                        |      |      |      |       |      |      |      |
-                                       | BKSP | ~L1  |------|       |------|      |      |
-                                       |      | ESC  | SHFT |       | SFHT |      |      |
+                                       |      |      |------|       |------|      |      |
+                                       |      |      |      |       |      |      |      |
                                        `--------------------'       `--------------------'
-
-
-       This is the new shifted layer.  
+       This is the shifted layer L2
        ,--------------------------------------------------            ,--------------------------------------------------,
        |        |      |      |      |      |      |  ~   |           |      |      |      |      |      |      |        |
        |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
@@ -136,8 +159,7 @@ $test
                                        `--------------------'       `--------------------'
 
       
-      * this is left for ease, but blueshift layer is now layer 10 and blueshift's FN14 layer is 11.  This is because higher
-      * levels have priority and having blueshift at 10 allows the colmak layer (4) to still use the same blueshift.
+     /*
      * This layout is based off "Blueshift".  There should be a link, but a google for ergodox and blueshift should get it.
      * I may have missed a few keys or changed them and not updated the docs
      *
@@ -146,7 +168,7 @@ $test
      * ,--------------------------------------------------.           ,--------------------------------------------------. *
      * |  App   |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  | PgUp   | *
      * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
-     * |  TAB   |      |   {  |   }  |   $  |   %  |  =>  |           |      |      |      |      |      |      | PgDn   |
+     * |  TAB   |      |   {  |   }  |   $  |   %  |  =>  |           |      |      |  _   |  -   |      |      | PgDn   |
      * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
      * |  End   |   _  |   (  |   )  |   +  |   "  |------|           |------| left | down |  up  |right |   $  |   =    |
      * |--------+------+------+------+------+------|  ->  |           |      |------+------+------+------+------+--------j
@@ -164,16 +186,16 @@ $test
      *
      */
 
-    KEYMAP(  // Layer1: blueshift
+    KEYMAP(  // Layer1: Left blueshift
         // left hand
         APP,  F1,  F2,  F3,  F4,  F5,  F6, 
         TAB,TRNS,FN14,FN14,FN14,FN14,FN11,
          ESC,FN14,FN14,FN14,FN14,FN14,
-        TRNS,MINS,FN14,MINS,BSLS, EQL,FN12,
+        TRNS,MINS,LBRC,RBRC,TRNS,TRNS,FN12,
         VOLU,VOLD,MNXT,TRNS,TRNS,
                                         TRNS,TRNS,
                                            TRNS,
-                              ESC, FN1,  LCTL,
+                              ESC, TRNS,  LCTL,
         // right hand
           F7,  F8,  F9, F10, F11, F12,PGUP,
           NO,TRNS,FN14,MINS,TRNS,TRNS,PGDN,
@@ -182,21 +204,19 @@ $test
                   DEL, END,PGDN,TRNS,TRNS,
         TRNS,FN14,
         TRNS,
-        TRNS, FN1, ENTER
+        TRNS,TRNS, ENTER
     ),
-
-    /*
+      
+     /*
+     * This layout is based off "Blueshift".  There should be a link, but a google for ergodox and blueshift should get it.
+     * I may have missed a few keys or changed them and not updated the docs
      *
+     ****************************************************************************************************
      *
-     * this is a dupe of layer 1's blueshift layout.  Layer 2 is used for fn14's shifted keys.
-     * if layer 1's key is FN14, it will shift the key from this layer (layer 2).
-     * This firmware can have 32 keyboard layers, and 32 functions, but functions are more useful to me.
-     * using a layer for reference allows me to use only one function and access any shifted key.  
-     * That's worth the tradeoff to me.
      * ,--------------------------------------------------.           ,--------------------------------------------------. *
      * |  App   |   f1 |  f2  |  f3  |  f4  |   f5 |  f6  |           |  f7  |  f8  |  f9  |  f10 |  f11 | f12  | PgUp   | *
      * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
-     * |  TAB   |      |   {  |   }  |   $  |   %  |  =>  |           |      |      |      |      |      |      | PgDn   |
+     * |  TAB   |      |   {  |   }  |   $  |   %  |  =>  |           |      |      |  _   |  -   |      |      | PgDn   |
      * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
      * |  End   |   _  |   (  |   )  |   +  |   "  |------|           |------| left | down |  up  |right |   $  |   =    |
      * |--------+------+------+------+------+------|  ->  |           |      |------+------+------+------+------+--------j
@@ -212,30 +232,28 @@ $test
      *                                 |      |      | RCTL |       | RCTL |      |      |
      *                                 `--------------------'       `--------------------'
      *
-     ****************************************************************************************************/
-    KEYMAP(  
+     */
+
+    KEYMAP(  // Layer2: Right blueshift
         // left hand
-        // layer 2 is for blueshift FN14
-        TRNS,  NO,  NO,  NO,  NO,  NO,  NO,
-        TRNS,TRNS,LBRC,RBRC,   4,   5,TRNS,
-        TRNS,  NO,   9,   0, EQL,QUOT,
-        LSFT,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,
-                                      TRNS,TRNS,
+        APP,  F1,  F2,  F3,  F4,  F5,  F6, 
+        TAB,TRNS,FN14,FN14,FN14,FN14,FN11,
+         ESC,FN14,FN14,FN14,FN14,FN14,
+        TRNS,MINS,LBRC,RBRC,TRNS,TRNS,FN12,
+        VOLU,VOLD,MNXT,TRNS,TRNS,
+                                        TRNS,TRNS,
                                            TRNS,
-                                 TRNS,TRNS,TRNS,
-
+                              ESC,TRNS,  LCTL,
         // right hand
-             TRNS,  NO,  NO,  NO,  NO,  NO,  NO,
-             TRNS,   6,   7,   8,   9,   0,PGUP,
-                    NO,  NO,  NO,  NO,BSLS,  NO,
-               NO,   1,SCLN,COMM, DOT,MINS,  NO,
-                         NO,  NO,  NO,  NO,  NO,
-        TRNS,TRNS,
+          F7,  F8,  F9, F10, F11, F12,PGUP,
+          NO,TRNS,FN14,MINS,TRNS,TRNS,PGDN,
+        LEFT,DOWN,  UP,RIGHT,FN14, EQL,
+          NO,FN14,INS,HOME,PGUP,TRNS,TRNS,
+                  DEL, END,PGDN,TRNS,TRNS,
+        TRNS,FN14,
         TRNS,
-        TRNS,TRNS,TRNS
+        TRNS,TRNS, ENTER
     ),
-
     KEYMAP(  // Layer3: experimental mouse key layer
         // left hand
         TRNS,NO,  NO,  NO,  NO,  NO,  NO,
@@ -329,7 +347,7 @@ $test
         TRNS,TRNS,TRNS
     ),
 
-    KEYMAP(  // Layer6: F-keys, cursor, Workman-layer switch, Teensy, leftled:red+onboard
+    KEYMAP(  // Layer6 numpad_layer
         // left hand
         TRNS,F1,  F2,  F3,  F4,  F5,  F6,
         FN0, NO,  PGUP,UP,  PGDN,PGUP,TRNS,
@@ -340,11 +358,11 @@ $test
                                            TRNS,
                                  TRNS,TRNS,TRNS,
         // right hand
-             F7,  F8,  F9,  F10, F11, F12, MINS,
-             TRNS,PGUP,PGUP,UP,  PGDN,NO,  FN0,
-                  PGDN,LEFT,DOWN,RGHT,NO,  TRNS,
-             TRNS,NO,  HOME,END, DEL, INS, TRNS,
-                       TRNS,TRNS,TRNS,TRNS,TRNS,
+               F7,  F8,   7,   8,   9,   0, MINS,
+             TRNS,PGUP,   4,   5,   6,  NO,  FN0,
+                  PGDN,   1,   2,   3,  NO,  TRNS,
+             TRNS, APP, INS,HOME,PGUP,TRNS, TRNS,
+                        DEL, END,PGDN,TRNS,TRNS,
         TRNS,TRNS,
         TRNS,
         TRNS,TRNS,TRNS
@@ -499,7 +517,7 @@ $test
         TRNS,  1,  2,  3,  4,  5,  NO,
         TRNS,TRNS,LBRC,RBRC,   4,   5,TRNS,
         TRNS,MINS,   9,   0, EQL,QUOT,
-        LSFT,TRNS,LBRC,RBRC,TRNS,TRNS,EQLS,
+        LSFT,TRNS,LBRC,RBRC,TRNS,TRNS,EQL,
         TRNS,TRNS,TRNS,TRNS,TRNS,
                                       TRNS,TRNS,
                                            TRNS,
@@ -578,7 +596,9 @@ enum macro_id {
     HELLO,
     VOLUP,
     FAT_ARROW,
-    THIN_ARROW
+    THIN_ARROW,
+    TMUX_MODAL,
+    AWESOME_MODAL
 };
 
 /*
@@ -587,19 +607,20 @@ enum macro_id {
 static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(TEENSY_KEY),                    // FN0  - Teensy key
 
-    ACTION_LAYER_MOMENTARY(BLUESHIFT_LAYER),                      // FN1 - Momentary toggle layer one for blueshift
-    ACTION_LAYER_MOMENTARY(SHORTCUT_LAYER),                      // FN2 - Momentary toggle layer 3 for mouse
-    ACTION_LAYER_TOGGLE(4),                         // FN3 - toggle layer 4 for norman layout
-    ACTION_LAYER_MOMENTARY(9),                      // FN4 - toggle layer 9 for teensy boot key
+    ACTION_LAYER_MOMENTARY(LEFT_BLUESHIFT),         // FN1 - Momentary MOMENTARY layer one for blueshift
+    ACTION_LAYER_MOMENTARY(RIGHT_BLUESHIFT),       // FN2 - Momentary MOMENTARY shortcut layer.
+    ACTION_LAYER_MOMENTARY(MOUSE_LAYER),               // FN3 - MOMENTARY layer 3 for mouse
+    ACTION_LAYER_TOGGLE(NORMAN_LAYER),              // FN4 - toggle layer 4 for norman layout
 
 
 
-    ACTION_LAYER_TOGGLE(5),                         // FN5 - toggle layer 5 for norman layout
-    ACTION_MACRO_TAP(LSHIFT_GT),                    // FN6 - >
-    ACTION_MACRO_TAP(LSHIFT_LBRACE),                // FN7 - {
-    ACTION_MACRO_TAP(LSHIFT_RBRACE),                // FN8 - }
+    ACTION_LAYER_TOGGLE(DVORAK_LAYER),              // FN5 - toggle layer 5 for dvorak layout
+    ACTION_LAYER_TAP_TOGGLE(NUMPAD_LAYER),          // FN6 - Momentary toggle layer 6 for numpad.
+    ACTION_MODS_TAP_KEY(MOD_LCTL, KC_COMM),         // FN7 - shift held, comma tap
+    ACTION_MODS_TAP_KEY(MOD_RSFT, KC_DOT),          // FN8 - shift held, dot tap
+    // this action is unused.
 
-    ACTION_MODS_TAP_KEY(MOD_RSFT, KC_SPC),          // FN9 = space/shift key
+    ACTION_LAYER_MOMENTARY(TEENSY_LAYER),           // FN9 - toggle layer 9 for teensy boot key
     ACTION_MODS_TAP_KEY(MOD_RSFT, KC_BSPC),         // FN10 = bspace/shift key
 
     ACTION_MACRO(FAT_ARROW),                        // FN11 = Fat arrow =>
@@ -607,10 +628,10 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(ESCAPE_WRAPPER),                // FN13 = clear oneshot and send esc.
     ACTION_FUNCTION(SHIFT_KEY),                     // FN14 = SHIFT_KEY action
     ACTION_FUNCTION(TMUX_MODAL),                     // FN15 = modal action for tmux..
-    ACTION_LAYER_TAP_KEY(10, KC_ESC),               // FN16 - blueshift on hold, escape on tap.
-    ACTION_LAYER_TAP_KEY(10, KC_TAB),               // FN17 - blueshift on hold, tab on tap.
+    ACTION_LAYER_TAP_KEY(RIGHT_BLUESHIFT, KC_ESC),               // FN16 - blueshift on hold, escape on tap.
+    ACTION_LAYER_TAP_KEY(LEFT_BLUESHIFT, KC_TAB),               // FN17 - blueshift on hold, tab on tap.
 
-    ACTION_FUNCTION(AWESOME_MODAL),                     // FN18 = shifted numbers
+    ACTION_FUNCTION(AWESOME_MODAL),                 // FN18 = shifted numbers
     ACTION_LAYER_SET(2, ON_BOTH),                   // FN19 - set Layer2, to use with Numpad keys
 
     ACTION_LAYER_MOMENTARY(2),                      // FN20 - momentary Layer2, to use with Numpad keys
@@ -627,8 +648,9 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_LAYER_TAP_KEY(4, KC_A),                  // FN28 = momentary Layer4 on A key, to use with unconvenient keys
     ACTION_LAYER_TAP_KEY(3, KC_S),                  // FN29 = momentary Layer3 on S key, to use with F* keys
     ACTION_LAYER_TAP_KEY(8, KC_D),                  // FN30 = momentary Layer8 on D key, to use with mouse and navigation keys
-    ACTION_LAYER_TAP_KEY(2, KC_F),                  // FN31 = momentary Layer2 on F key, to use with Numpad keys
+    ACTION_LAYER_MOMENTARY(SHORTCUT_LAYER),         // FN2 - Momentary toggle layer 3 for mouse
 };
+
 
 
 
