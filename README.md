@@ -7,6 +7,10 @@ Documentation is probably not 100% correct.
 
 Updates
 -------
+#### 2018/08/26
+Particular to the ezmac fork; I did a rebase to pull cub-uanic's updates, but haven't built.  I'm not sure if this will build.
+
+
 #### 2017/01/11
 Changed action code for `ACTION_LAYER_MODS` and this may cause incompatibility with existent shared URL and downloaded firmwware of keymap editor. If you are using the action you just have to redefine it on keymap editor. Existent keymap code should not suffer.
 
